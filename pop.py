@@ -45,15 +45,20 @@ def print_info(msg, indent=0):
             value = msg.get(header, '')
             l.info(value)
             if value:
-                if header=='Subject':
-                    l.info(header)
-                    value = decode_str(value)
-                    l.info(value)
-                else:
+                if header == 'From':
                     hdr, addr = parseaddr(value)
-                    name = decode_str(hdr)
-                    value = u'%s <%s>' % (name, addr)
-            l.info('%s%s: %s' % ('  ' * indent, header, value))
+                    l.warning(addr)
+
+
+                # if header=='Subject':
+                #     l.info(header)
+                #     value = decode_str(value)
+                #     l.info(value)
+                # else:
+                #     hdr, addr = parseaddr(value)
+                #     name = decode_str(hdr)
+                #     value = u'%s <%s>' % (name, addr)
+            # l.info('%s%s: %s' % ('  ' * indent, header, value))
     if (msg.is_multipart()):
         parts = msg.get_payload()
         for n, part in enumerate(parts):
