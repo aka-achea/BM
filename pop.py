@@ -42,18 +42,18 @@ def print_info(msg, indent=0):
     l = ml.mylogger(logfile,logfilelevel,funcname)   
     if indent == 0:
         for header in ['From', 'To', 'Subject']:
-            value = msg.get(header, '')
-            l.info(value)
+            value = msg.get(header, '')            
             if value:
+                l.info(value)
                 if header == 'From':
                     hdr, addr = parseaddr(value)
                     l.warning(addr)
-
-
-                # if header=='Subject':
-                #     l.info(header)
-                #     value = decode_str(value)
-                #     l.info(value)
+                if header=='Subject':
+                    l.info(header)
+                    value = decode_str(value)
+                    l.warning(value)
+                    tag = value[:1]
+                    l.warning(tag)
                 # else:
                 #     hdr, addr = parseaddr(value)
                 #     name = decode_str(hdr)
@@ -71,11 +71,13 @@ def print_info(msg, indent=0):
         if content_type=='text/plain' or content_type=='text/html':
             content = msg.get_payload(decode=True)
             l.info(content)
-            charset = guess_charset(msg)
-            l.info(charset)
+            charset = guess_charset(msg)            
             if charset:
+                l.info(charset)
                 content = content.decode(charset)
             l.info('%sText: %s' % ('  ' * indent, content + '...'))
+            print(content)
+            print(content[:4])
         else:
             l.info('%sAttachment: %s' % ('  ' * indent, content_type))
 
