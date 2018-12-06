@@ -23,7 +23,7 @@ class db():
     def insert(self,adic,dbfile):
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()    
-        # print(adic)    
+        print(adic)    
         time = adic['time']
         title = adic['title']
         tag = adic['tag']
