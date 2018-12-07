@@ -42,7 +42,9 @@ class db():
     def q_tag(self,dbfile,tag):
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()        
-        cursor.execute('select title,source,link from bookmark')
+        cmd = 'select title,link from bookmark where tag = "'+tag+'"'
+        print(cmd)
+        cursor.execute(cmd)
         v = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -57,13 +59,37 @@ class db():
         conn.close()
         return v
 
+    def q_keyword(self,dbfile,keyword):
+        conn = sqlite3.connect(dbfile)
+        cursor = conn.cursor() 
+        cmd = 'select title,link from bookmark where title like "%'+keyword+'%"'
+        print(cmd)       
+        cursor.execute(cmd)
+        v = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return v  
+
+    def q_t(self,dbfile,keyword):
+        conn = sqlite3.connect(dbfile)
+        cursor = conn.cursor() 
+        cmd = 'select title,link from bookmark where title like "%'+keyword+'%"'
+        print(cmd)       
+        cursor.execute(cmd)
+        v = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return v  
+
+    def q_custom(self):
+        pass
     
 
 if __name__=='__main__':
     import time
     dbfile = 'E:\\bm.db'
     db = db()
-    db.create(dbfile)
+    # db.create(dbfile)
 
     # adic = { 'tag': 'test',\
     #      'link': 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg', 'title':\
@@ -75,4 +101,12 @@ if __name__=='__main__':
     # db.insert(adic,dbfile)
     # v= db.query(dbfile,tag)
             # for i in v: print(i)
+    keyword = '流水线'
+    v = db.q_keyword(dbfile,keyword)
+    for i in v: print(i)
 
+    tag = '畅'
+    v = db.q_tag(dbfile,tag)
+    for i in v: print(i)
+
+    source = '果壳'

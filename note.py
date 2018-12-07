@@ -16,7 +16,7 @@ from pop import get_fav
 
 import mylog as ml
 logfilelevel = 10 # Debug
-logfile = 'E:\\app.log'
+logfile = 'E:\\BM.log'
 
 
 
@@ -68,18 +68,20 @@ def main():
         p = ana_wx(link)
         f['source'] = p['source']
         f['title'] = p['title']
+        t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+        f['time'] = t        
         l.info(f)
         fl[i] = f
+
+    l.info(fl)
     
-    print(fl)
+    
 
     dbfile = 'E:\\bm.db'
     d = db()
     num = len(fl)+1    
-    for i in range(1,num):
-        t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-        f = fl[i] 
-        f['time'] = t
+    for i in range(1,num):        
+        f = fl[i]         
         d.insert(f,dbfile)
 
   
@@ -87,7 +89,7 @@ def main():
     # db.insert(a,dbfile)
     # v= db.q_tag(dbfile,tag)
     # for i in v: print(i)
-    source = 'InfoQ'
+    source = '果壳'
     v = d.q_source(dbfile,source)
     for i in v: print(i)
 
