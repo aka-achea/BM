@@ -3,7 +3,7 @@
 #Python3
 
 
-import poplib,configparser,time
+import imaplib,configparser,time
 from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr,parsedate,parsedate_to_datetime
@@ -14,29 +14,6 @@ logfile = 'E:\\BM.log'
 
 
 
-def guess_charset(msg):
-    funcname = 'pop.guess_charset'    
-    l = ml.mylogger(logfile,logfilelevel,funcname)
-    charset = msg.get_charset()
-    l.debug(charset)
-    if charset is None:
-        content_type = msg.get('Content-Type', '').lower()
-        l.debug(content_type)
-        pos = content_type.find('charset=')
-        if pos >= 0:
-            charset = content_type[pos + 8:].strip()
-    return charset
-
-def decode_str(s):
-    funcname = 'pop.decode_str'    
-    l = ml.mylogger(logfile,logfilelevel,funcname)
-    value, charset = decode_header(s)[0]
-    l.debug(charset)
-    if charset:
-        value = value.decode(charset)
-    l.debug(value)
-    return value
-
 def read_mail(msg, indent=0):
     funcname = 'pop.read_mail'    
     l = ml.mylogger(logfile,logfilelevel,funcname)   
@@ -45,7 +22,8 @@ def read_mail(msg, indent=0):
         for header in ['From', 'To', 'Subject','Date']:
             value = msg.get(header, '')  
             l.debug(value)          
-            if value:                
+            if value:
+                
                 if header == 'From':
                     l.debug('Look for From address')
                     hdr, addr = parseaddr(value)
@@ -62,7 +40,7 @@ def read_mail(msg, indent=0):
                     l.debug('Look for Date')
                     mdate = time.strftime('%Y-%m-%d %H:%M:%S',parsedate(value))
                     l.debug(mdate)
-                    f['date'] = mdate
+                    f['Date'] = mdate
     if (msg.is_multipart()):
         parts = msg.get_payload()
         for n, part in enumerate(parts):
@@ -79,63 +57,56 @@ def read_mail(msg, indent=0):
             if charset:
                 l.debug(charset)
                 content = content.decode(charset)
-            # l.debug(content)
+            l.debug(content)
             # link = content.split('\r\n')[0]
 
             content = content.split('\r\n')
-            # l.debug(content)
-            for h in content:
-                if h[:4] == 'http':
-                    f['link'] = h        
-
+            for l in content:
+                if l[:4] == 'http':
+                    f['link'] = l
+            if  f['link'] == '':
+                l.error('Cannot find link')
         else:
             l.info('%sAttachment: %s' % ('  ' * indent, content_type))
     return f
     
 
+
 def get_fav():
-    funcname = 'pop.get_fav'    
+    funcname = 'imap.get_fav'    
     l = ml.mylogger(logfile,logfilelevel,funcname)
-    confile = 'E:\\bm.ini'
+    confile = 'E:\\BM.ini'
     config = configparser.ConfigParser()
     config.read(confile)
 
-    mailsvr = config['mailsvr']['pop']
+    mailsvr = config['mailsvr']['imap']
     user = config['user']['user']
     key = config['key']['key']
-    try:
-        M = poplib.POP3_SSL(mailsvr)
-    except TimeoutError as e:
-        l.error(e)
-        l.error('Retry')
 
+    M = imaplib.IMAP4_SSL(mailsvr)
     # M.set_debuglevel(2)
-    l.debug(M.getwelcome())
-    # M.apop(user,key) # not supported
-    M.user(user)
-    M.pass_(key)
-    MS = M.stat()
-    l.debug(MS)
-    ff = {}
-    num = len(M.list()[1])
-    l.info("You have %d messages." % num)
+    M.login(user,key)
+    l.info(M.list())
+    M.select()
+    M.select('INBOX')
+    t, msgnums = M.search(None, 'ALL')
+    # print(t)
+    print(msgnums)
+    # num = len(msgnums)
+    # l.info("You have %d new messages." % num)
 
-    for i in range(int(num),0,-1):
-        resp, lines, octets = M.retr(i)
-        msg_content = b'\r\n'.join(lines).decode('utf-8')
-        msg = Parser().parsestr(msg_content)
-        # l.debug(msg)
-        f = read_mail(msg)
-        l.debug(f)
-        if 'link' in f.keys():
-            M.dele(i)
-        else:
-            l.error('Cannot find link')
-        ff[i]=f
-    l.debug(ff)
-    M.quit()
-    return ff
+    # for i in range(int(num),0,-1):
+    #     resp, lines, octets = M.retr(i)
+    #     msg_content = b'\r\n'.join(lines).decode('utf-8')
+    #     msg = Parser().parsestr(msg_content)
+    #     # l.debug(msg)
+    #     f = read_mail(msg)
+    #     l.debug(f)
+    #     ff[i]=f
+    # l.debug(ff)
+    
+    # M.quit()
+    # return ff
 
 if __name__ == "__main__":
-    ff = get_fav()
-    print(ff)
+    get_fav()

@@ -10,14 +10,11 @@ from html.parser import HTMLParser
 # customized module
 # from modstr import modificate
 from openlink import op_simple
-
 from store import db
 from pop import get_fav 
-
 import mylog as ml
 logfilelevel = 10 # Debug
 logfile = 'E:\\BM.log'
-
 
 
 def ana_wx(page):
@@ -28,55 +25,51 @@ def ana_wx(page):
     # html = urlopen(page)
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
     # bsObj = BeautifulSoup(html,"html5lib") #;print(bsObj)
-
-    source = bsObj.find('span',{'class':'rich_media_meta rich_media_meta_nickname'})
-    source = source.a.text.strip()
-
+    author = bsObj.find('span',{'class':'rich_media_meta rich_media_meta_nickname'})
+    author = author.a.text.strip()
     title = bsObj.find('h2',{'class':'rich_media_title'})
     title = title.text.strip()
-
-    p = {'source':source,'title':title}
+    p = {'author':author,'title':title}
     # p['link'] = page
     l.debug(p)
-
     return p
 
 
-def create_note(page,tag,mail): # return bookmark dictionary
-    a = {}
-    t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-    a['time'] = t
-    a['tag'] = tag
-    a['source'] = p['gzh']
-    a['title'] = p['title']
-    a['link'] = p['link']
-    a['mail'] = mail
-    print(a)
-    return a
+# def create_note(page,tag,mail): # return bookmark dictionary
+#     a = {}
+#     t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+#     a['time'] = t
+#     a['tag'] = tag
+#     a['source'] = p['gzh']
+#     a['title'] = p['title']
+#     a['link'] = p['link']
+#     a['mail'] = mail
+#     print(a)
+#     return a
 
 def main():
     funcname = 'note.main'
     l = ml.mylogger(logfile,logfilelevel,funcname)  
-    # ff = get_fav()
-    ff = {2: {'mail': 'CJYRB@hotmail.com', 'tag': 'F', 'link': 'https://mp.weixin.qq.com/s/A1YL4oVkdXvsdGAx0-2mIw'}, 1: {'mail': 'CJYRB@hotmail.com', 'tag': '畅', 'link': 'https://mp.weixin.qq.com/s/PRarJI24Y8YxmmSm_l6-IA'}}
+    ff = get_fav()
     l.debug(ff)
     fl = {}
     num = len(ff)+1    
     for i in range(1,num):
         f = ff[i]
         link = f['link']
-        p = ana_wx(link)
-        f['source'] = p['source']
-        f['title'] = p['title']
-        t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-        f['time'] = t        
-        l.info(f)
-        fl[i] = f
-
-    l.info(fl)
-    
-    
-
+        if link.split('/')[2] == 'mp.weixin.qq.com':
+            p = ana_wx(link)
+            f['source'] = '微信公众号'
+            f['author'] = p['author']
+            f['title'] = p['title']
+            # t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+            # f['time'] = t        
+            l.debug(f)
+            fl[i] = f
+        else:
+            l.warning('Need to check source')
+    l.debug(fl)
+    # put in DB
     dbfile = 'E:\\bm.db'
     d = db()
     num = len(fl)+1    
@@ -84,21 +77,11 @@ def main():
         f = fl[i]         
         d.insert(f,dbfile)
 
-  
-
-    # db.insert(a,dbfile)
-    # v= db.q_tag(dbfile,tag)
-    # for i in v: print(i)
-    source = '果壳'
-    v = d.q_source(dbfile,source)
-    for i in v: print(i)
-
-
-
-
 
 if __name__=='__main__':
+    # ff = {1: {'mail': 'CJYRB@hotmail.com', 'tag': '计', 'date': '2018-12-07 11:39:48', 'link': 'https://mp.weixin.qq.com/s/vwF0QOkz4if47FZ9x0t3NA'},2: {'mail': 'CJYRB@hotmail.com', 'tag': '食', 'date': '2018-12-05 09:57:23', 'link': 'https://mp.weixin.qq.com/s/A1YL4oVkdXvsdGAx0-2mIw'}}
     main()
+
     # page = 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg'
     # page = 'file:///E://0.html'
 

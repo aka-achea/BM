@@ -13,6 +13,7 @@ class db():
                         time varchar(100) primary key,\
                         title varchar(100),\
                         tag varchar(20),\
+                        author varchar(50),\
                         source varchar(100),\
                         link varchar(1000),\
                         mail varchar(100)   )' 
@@ -24,13 +25,18 @@ class db():
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()    
         print(adic)    
-        time = adic['time']
+        time = adic['date']
         title = adic['title']
         tag = adic['tag']
         source = adic['source']
+        author = adic['author']
         link = adic['link']
         mail = adic['mail']
-        cursor.execute("insert into bookmark values (?,?,?,?,?,?)",(time,title,tag,source,link,mail))
+        try:
+            cursor.execute("insert into bookmark values (?,?,?,?,?,?,?)",(time,title,tag,author,source,link,mail))
+        except sqlite3.IntegrityError as e:
+            print(e)
+            print('duplicate entry')
         cursor.close()
         conn.commit()
         conn.close()
@@ -81,15 +87,28 @@ class db():
         conn.close()
         return v  
 
+    def q_a(self,dbfile):
+        conn = sqlite3.connect(dbfile)
+        cursor = conn.cursor() 
+        cmd = 'select * from bookmark'
+        print(cmd)       
+        cursor.execute(cmd)
+        v = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return v  
+
     def q_custom(self):
         pass
     
 
 if __name__=='__main__':
-    import time
     dbfile = 'E:\\bm.db'
     db = db()
     # db.create(dbfile)
+    v = db.q_a(dbfile)
+    print(v)
+
 
     # adic = { 'tag': 'test',\
     #      'link': 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg', 'title':\
@@ -101,12 +120,12 @@ if __name__=='__main__':
     # db.insert(adic,dbfile)
     # v= db.query(dbfile,tag)
             # for i in v: print(i)
-    keyword = '流水线'
-    v = db.q_keyword(dbfile,keyword)
-    for i in v: print(i)
+    # keyword = '流水线'
+    # v = db.q_keyword(dbfile,keyword)
+    # for i in v: print(i)
 
-    tag = '畅'
-    v = db.q_tag(dbfile,tag)
-    for i in v: print(i)
+    # tag = '畅'
+    # v = db.q_tag(dbfile,tag)
+    # for i in v: print(i)
 
-    source = '果壳'
+    # source = '果壳'

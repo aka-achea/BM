@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #coding:utf-8
 # Python3
-# Version: 20181203
+# Version: 20181208
 
 import random,time,requests
 from urllib.request import urlopen,Request,HTTPError
@@ -22,7 +22,7 @@ def op_simple(URL): # use built-in
     req = Request(URL,headers=headers)
     try:
         html = urlopen(req)
-        time.sleep(random.uniform(2,3))
+        time.sleep(random.uniform(2,4))
         #l.verbose(html.info())
         #l.debug(html.getcode())
         status = html.getcode()
@@ -57,6 +57,6 @@ def op_requests(URL,para=''):  # use requets
 if __name__=='__main__':
 
     url = 'http://www.xiami.com/widget/xml-single/sid/1769402049'
-    html = oplink(url)
+    html = op_simple(url)
     print(html[1])
     print(html[0])
