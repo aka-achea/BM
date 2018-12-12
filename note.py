@@ -51,31 +51,41 @@ def main():
     funcname = 'note.main'
     l = ml.mylogger(logfile,logfilelevel,funcname)  
     ff = get_fav()
+    # ff = {1: {'mail': 'CJYRB@hotmail.com', 'tag': '健', 'date': '2018-12-11 11:40:07', 'link': 'https://mp.weixin.qq.com/s/XRxp7vzj0X5_hPixDLXQgQ'} }
     l.debug(ff)
     fl = {}
     num = len(ff)+1    
     for i in range(1,num):
         f = ff[i]
-        link = f['link']
-        if link.split('/')[2] == 'mp.weixin.qq.com':
-            p = ana_wx(link)
-            f['source'] = '微信公众号'
-            f['author'] = p['author']
-            f['title'] = p['title']
-            # t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-            # f['time'] = t        
-            l.debug(f)
-            fl[i] = f
+        if 'link' in f.keys():     
+            link = f['link']
+            if link.split('/')[2] == 'mp.weixin.qq.com':
+                p = ana_wx(link)
+                f['source'] = '微信公众号'
+                f['author'] = p['author']
+                f['title'] = p['title']
+                # t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+                # f['time'] = t        
+                l.debug(f)
+                fl[i] = f
+            else:
+                l.warning('Need to check source')
+                fl[i] = f
         else:
-            l.warning('Need to check source')
+            l.debug('Empty link Email from: '+f['mail'])
+            fl[i] = f
+
     l.debug(fl)
     # put in DB
     dbfile = 'E:\\bm.db'
     d = db()
     num = len(fl)+1    
     for i in range(1,num):        
-        f = fl[i]         
-        d.insert(f,dbfile)
+        f = fl[i]     
+        if 'link' in f.keys():     
+            d.insert(f,dbfile)
+        else:
+            l.debug('Empty link Email from: '+f['mail'])
 
 
 if __name__=='__main__':

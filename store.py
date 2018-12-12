@@ -3,10 +3,16 @@
 # Python3
 
 import sqlite3
-from prettytable import PrettyTable,from_db_cursor
+from prettytable import PrettyTable , from_db_cursor
+
+import mylog as ml
+logfilelevel = 10 # Debug
+logfile = 'E:\\BM.log'
 
 class db():
+  
     def create(self,dbfile):
+
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()
         cursor.execute('create table bookmark (\
@@ -22,9 +28,12 @@ class db():
         conn.close()
 
     def insert(self,adic,dbfile):
+        funcname = 'db.insert'    
+        l = ml.mylogger(logfile,logfilelevel,funcname) 
+
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()    
-        print(adic)    
+        l.debug(adic)    
         time = adic['date']
         title = adic['title']
         tag = adic['tag']
@@ -35,8 +44,8 @@ class db():
         try:
             cursor.execute("insert into bookmark values (?,?,?,?,?,?,?)",(time,title,tag,author,source,link,mail))
         except sqlite3.IntegrityError as e:
-            print(e)
-            print('duplicate entry')
+            l.error(e)
+            l.error('duplicate entry')
         cursor.close()
         conn.commit()
         conn.close()
@@ -88,10 +97,13 @@ class db():
         return v  
 
     def q_a(self,dbfile):
+        funcname = 'db.q_a'    
+        l = ml.mylogger(logfile,logfilelevel,funcname) 
+
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'select * from bookmark'
-        # print(cmd)       
+        l.debug(cmd)       
         cursor.execute(cmd)
         # v = cursor.fetchall()
         v = from_db_cursor(cursor)
@@ -105,7 +117,7 @@ class db():
     
 
 if __name__=='__main__':
-    dbfile = 'E:\\UT\\bm.db'
+    dbfile = 'E:\\bm.db'
     db = db()
     # db.create(dbfile)
     v = db.q_a(dbfile)

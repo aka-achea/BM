@@ -40,7 +40,7 @@ def decode_str(s):
 def read_mail(msg, indent=0):
     funcname = 'pop.read_mail'    
     l = ml.mylogger(logfile,logfilelevel,funcname)   
-    f = {}
+    f = {} # mail,tag,date,link
     if indent == 0:
         for header in ['From', 'To', 'Subject','Date']:
             value = msg.get(header, '')  
@@ -128,10 +128,13 @@ def get_fav():
         f = read_mail(msg)
         l.debug(f)
         if 'link' in f.keys():
+            ff[i]=f
             M.dele(i)
+            l.debug('Remove email')
         else:
-            l.error('Cannot find link')
-        ff[i]=f
+            ff[i]=f
+            l.error('Empty link Email from: '+f['mail'])
+        
     l.debug(ff)
     M.quit()
     return ff
