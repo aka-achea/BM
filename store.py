@@ -3,7 +3,7 @@
 # Python3
 
 import sqlite3
-
+from prettytable import PrettyTable,from_db_cursor
 
 class db():
     def create(self,dbfile):
@@ -91,9 +91,11 @@ class db():
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'select * from bookmark'
-        print(cmd)       
+        # print(cmd)       
         cursor.execute(cmd)
-        v = cursor.fetchall()
+        # v = cursor.fetchall()
+        v = from_db_cursor(cursor)
+        v.align['title']='l'
         cursor.close()
         conn.close()
         return v  
@@ -103,12 +105,12 @@ class db():
     
 
 if __name__=='__main__':
-    dbfile = 'E:\\bm.db'
+    dbfile = 'E:\\UT\\bm.db'
     db = db()
     # db.create(dbfile)
     v = db.q_a(dbfile)
-    print(v)
-
+    # print(v)
+    print(v.get_string(fields = ['title','tag']))
 
     # adic = { 'tag': 'test',\
     #      'link': 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg', 'title':\
@@ -129,3 +131,5 @@ if __name__=='__main__':
     # for i in v: print(i)
 
     # source = '果壳'
+
+   
