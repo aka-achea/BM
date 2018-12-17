@@ -1,7 +1,7 @@
 Personal favorite article
 
 tag::
-食物、玩乐、旅游、计算机、史学、笑话、地理、生活、测试、健康
+食物、玩乐、旅游、计算机、史学、笑话、地理、生活、测试、健康、科学
 
 module list:
 pop.py - retreive email from 163
