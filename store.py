@@ -122,7 +122,7 @@ if __name__=='__main__':
     # db.create(dbfile)
     v = db.q_a(dbfile)
     # print(v)
-    print(v.get_string(fields = ['title','tag']))
+    print(v.get_string(fields = ['title','tag','link']))
 
     # adic = { 'tag': 'test',\
     #      'link': 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg', 'title':\
