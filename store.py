@@ -114,7 +114,28 @@ class db():
 
     def q_custom(self):
         pass
-    
+
+    def d_title(self,dbfile,keyword):
+        funcname = 'db.d_title'    
+        l = ml.mylogger(logfile,logfilelevel,funcname) 
+        conn = sqlite3.connect(dbfile)
+        cursor = conn.cursor() 
+        cmd = 'delete from bookmark where title like "%'+keyword+'%"'
+        l.debug(cmd)       
+        cursor.execute(cmd)
+        cursor.close()
+        conn.close()
+
+    def u_tag(self,dbfile,ntag,title):
+        funcname = 'db.d_title'    
+        l = ml.mylogger(logfile,logfilelevel,funcname) 
+        conn = sqlite3.connect(dbfile)
+        cursor = conn.cursor() 
+        cmd = 'update bookmark set tag = "'+ntag+'" where title like "%'+keyword+'%"'
+        l.debug(cmd)       
+        cursor.execute(cmd)
+        cursor.close()
+        conn.close()
 
 if __name__=='__main__':
     dbfile = 'E:\\bm.db'
