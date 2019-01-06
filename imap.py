@@ -8,9 +8,10 @@ from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr,parsedate,parsedate_to_datetime
 
+# Customized module
 import mylog as ml
 logfilelevel = 10 # Debug
-logfile = 'E:\\BM.log'
+logfile = r'M:\MyProject\BM\BM.log'
 
 
 

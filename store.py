@@ -7,7 +7,8 @@ from prettytable import PrettyTable , from_db_cursor
 
 import mylog as ml
 logfilelevel = 10 # Debug
-logfile = 'E:\\BM.log'
+logfile = r'M:\MyProject\BM\BM.log'
+dbfile = r'M:\MyProject\BM\bm.db'
 
 class db():
   
@@ -99,7 +100,6 @@ class db():
     def q_a(self,dbfile):
         funcname = 'db.q_a'    
         l = ml.mylogger(logfile,logfilelevel,funcname) 
-
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'select * from bookmark order by title'
@@ -138,7 +138,6 @@ class db():
         conn.close()
 
 if __name__=='__main__':
-    dbfile = 'E:\\bm.db'
     db = db()
     # db.create(dbfile)
     v = db.q_a(dbfile)

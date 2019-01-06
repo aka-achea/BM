@@ -13,8 +13,11 @@ from openlink import op_simple
 from store import db
 from pop import get_fav 
 import mylog as ml
+
 logfilelevel = 10 # Debug
-logfile = 'E:\\BM.log'
+logfile = r'M:\MyProject\BM\BM.log'
+dbfile = r'M:\MyProject\BM\bm.db'
+Attention = r'M:\MyProject\BM\Attention.txt'
 
 
 def ana_wx(page):
@@ -22,7 +25,6 @@ def ana_wx(page):
     l = ml.mylogger(logfile,logfilelevel,funcname)   
     html = op_simple(page)[0]
     # print(html)
-    # html = urlopen(page)
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
     # bsObj = BeautifulSoup(html,"html5lib") #;print(bsObj)
     author = bsObj.find('span',{'class':'rich_media_meta rich_media_meta_nickname'})
@@ -34,6 +36,9 @@ def ana_wx(page):
     l.debug(p)
     return p
 
+
+def ana_mono(page):
+    pass
 
 # def create_note(page,tag,mail): # return bookmark dictionary
 #     a = {}
@@ -50,10 +55,9 @@ def ana_wx(page):
 def main():
     funcname = 'note.main'
     l = ml.mylogger(logfile,logfilelevel,funcname)  
+    l.debug('Query Email')
     ff = get_fav()
-    # ff = {1: {'mail': 'CJYRB@hotmail.com', 'tag': '健', 'date': '2018-12-11 11:40:07', 'link': 'https://mp.weixin.qq.com/s/XRxp7vzj0X5_hPixDLXQgQ'} }
-    l.debug(ff)
-    fl = {}
+    fl = {}  # favor list
     num = len(ff)+1    
     for i in range(1,num):
         f = ff[i]
@@ -63,21 +67,18 @@ def main():
                 p = ana_wx(link)
                 f['source'] = '微信公众号'
                 f['author'] = p['author']
-                f['title'] = p['title']
-                # t = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-                # f['time'] = t        
+                f['title'] = p['title']  
                 l.debug(f)
                 fl[i] = f
             else:
                 l.warning('Need to check source')
                 fl[i] = f
         else:
-            l.debug('Empty link Email from: '+f['mail'])
+            # l.debug('Empty link Email from: '+f['mail'])
             fl[i] = f
 
-    l.debug(fl)
-    # put in DB
-    dbfile = 'E:\\bm.db'
+    l.debug('Full list: '+str(fl))
+    l.debug('store in DB')
     d = db()
     num = len(fl)+1    
     for i in range(1,num):        
@@ -86,6 +87,10 @@ def main():
             d.insert(f,dbfile)
         else:
             l.debug('Empty link Email from: '+f['mail'])
+            b = f['mail']
+            with open(Attention,'a') as f:                
+                f.write('Empty link Email from: '+b+'\n')
+
 
 
 if __name__=='__main__':
