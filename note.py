@@ -12,7 +12,7 @@ from html.parser import HTMLParser
 from openlink import op_simple
 from store import db
 from pop import get_fav 
-import mylog as ml
+from mylog import get_funcname, mylogger
 
 logfilelevel = 10 # Debug
 logfile = r'M:\MyProject\BM\BM.log'
@@ -21,8 +21,7 @@ Attention = r'M:\MyProject\BM\Attention.txt'
 
 
 def ana_wx(page):
-    funcname = 'note.ana_wx'
-    l = ml.mylogger(logfile,logfilelevel,funcname)   
+    l = mylogger(logfile,logfilelevel,get_funcname())   
     html = op_simple(page)[0]
     # print(html)
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
@@ -53,8 +52,7 @@ def ana_mono(page):
 #     return a
 
 def main():
-    funcname = 'note.main'
-    l = ml.mylogger(logfile,logfilelevel,funcname)  
+    l = mylogger(logfile,logfilelevel,get_funcname())  
     l.debug('Query Email')
     ff = get_fav()
     fl = {}  # favor list

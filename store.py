@@ -5,7 +5,9 @@
 import sqlite3
 from prettytable import PrettyTable , from_db_cursor
 
-import mylog as ml
+# customized module
+from mylog import get_funcname, mylogger
+
 logfilelevel = 10 # Debug
 logfile = r'M:\MyProject\BM\BM.log'
 dbfile = r'M:\MyProject\BM\bm.db'
@@ -29,9 +31,7 @@ class db():
         conn.close()
 
     def insert(self,adic,dbfile):
-        funcname = 'db.insert'    
-        l = ml.mylogger(logfile,logfilelevel,funcname) 
-
+        l = mylogger(logfile,logfilelevel,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()    
         l.debug(adic)    
@@ -98,8 +98,7 @@ class db():
         return v  
 
     def q_a(self,dbfile):
-        funcname = 'db.q_a'    
-        l = ml.mylogger(logfile,logfilelevel,funcname) 
+        l = mylogger(logfile,logfilelevel,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'select * from bookmark order by title'
@@ -116,8 +115,7 @@ class db():
         pass
 
     def d_title(self,dbfile,keyword):
-        funcname = 'db.d_title'    
-        l = ml.mylogger(logfile,logfilelevel,funcname) 
+        l = mylogger(logfile,logfilelevel,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'delete from bookmark where title like "%'+keyword+'%"'
@@ -126,9 +124,8 @@ class db():
         cursor.close()
         conn.close()
 
-    def u_tag(self,dbfile,ntag,title):
-        funcname = 'db.d_title'    
-        l = ml.mylogger(logfile,logfilelevel,funcname) 
+    def u_tag(self,dbfile,ntag,title):    
+        l = mylogger(logfile,logfilelevel,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'update bookmark set tag = "'+ntag+'" where title like "%'+keyword+'%"'

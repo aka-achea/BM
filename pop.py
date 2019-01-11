@@ -9,15 +9,14 @@ from email.header import decode_header
 from email.utils import parseaddr,parsedate,parsedate_to_datetime
 
 # customized module
-import mylog as ml
+from mylog import get_funcname, mylogger
 
 logfilelevel = 10 # Debug
 logfile = r'M:\MyProject\BM\BM.log'
 confile = r'M:\MyProject\BM\bm.ini'
 
 def guess_charset(msg):
-    funcname = 'pop.guess_charset'    
-    l = ml.mylogger(logfile,logfilelevel,funcname)
+    l = mylogger(logfile,logfilelevel,get_funcname()) 
     charset = msg.get_charset()
     if charset is None:
         content_type = msg.get('Content-Type', '').lower()
@@ -29,8 +28,7 @@ def guess_charset(msg):
     return charset
 
 def decode_str(s):
-    funcname = 'pop.decode_str'    
-    l = ml.mylogger(logfile,logfilelevel,funcname)
+    l = mylogger(logfile,logfilelevel,get_funcname()) 
     value, charset = decode_header(s)[0]
     if charset:
         l.debug('Header charset: '+charset)
@@ -39,8 +37,7 @@ def decode_str(s):
     return value
 
 def read_mail(msg, indent=0):
-    funcname = 'pop.read_mail'    
-    l = ml.mylogger(logfile,logfilelevel,funcname)   
+    l = mylogger(logfile,logfilelevel,get_funcname()) 
     f = {} # mail,tag,date,link
     if indent == 0:
         for header in ['From','To','Subject','Date']:
@@ -96,8 +93,7 @@ def read_mail(msg, indent=0):
     return f # mail,tag,date,link
     
 def get_fav():
-    funcname = 'pop.get_fav'    
-    l = ml.mylogger(logfile,logfilelevel,funcname)    
+    l = mylogger(logfile,logfilelevel,get_funcname())    
     config = configparser.ConfigParser()
     config.read(confile)
     mailsvr = config['mailsvr']['pop']
