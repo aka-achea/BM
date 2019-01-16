@@ -10,14 +10,9 @@ from html.parser import HTMLParser
 # customized module
 # from modstr import modificate
 from openlink import op_simple
-from store import db
-from pop import get_fav 
-from mylog import get_funcname, mylogger
-
-logfilelevel = 10 # Debug
-logfile = r'M:\MyProject\BM\BM.log'
-dbfile = r'M:\MyProject\BM\bm.db'
-Attention = r'M:\MyProject\BM\Attention.txt'
+from bm_store import db
+from bm_pop import get_fav,logfile,logfilelevel,dbfile,attention
+from mylog import get_funcname,mylogger
 
 
 def ana_wx(page):
@@ -82,11 +77,11 @@ def main():
     for i in range(1,num):        
         f = fl[i]     
         if 'link' in f.keys():     
-            d.insert(f,dbfile)
+            d.insert(f)
         else:
             l.debug('Empty link Email from: '+f['mail'])
             b = f['mail']
-            with open(Attention,'a') as f:                
+            with open(attention,'a') as f:                
                 f.write('Empty link Email from: '+b+'\n')
 
 

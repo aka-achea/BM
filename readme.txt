@@ -4,6 +4,7 @@ tag:
 食物、玩乐、旅游、计算机、史学、笑话、地理、生活、测试、健康、科学、经济
 食玩旅计史笑地生测健科经
 
+
 module list:
 pop.py - retreive email from 163
 store.py - store data in sqlite
@@ -12,6 +13,7 @@ ut-bm.py - unit test
 
 
 Change log:
+2019.1.16 optimize log function v1.1
 2019.1.9 optimize DB function v1.0
 2019.1.6 reorg module, add attention list v0.9
 2018.12.12 fix bug, add table output v0.8

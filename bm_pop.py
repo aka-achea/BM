@@ -11,9 +11,17 @@ from email.utils import parseaddr,parsedate,parsedate_to_datetime
 # customized module
 from mylog import get_funcname, mylogger
 
-logfilelevel = 10 # Debug
-logfile = r'M:\MyProject\BM\BM.log'
 confile = r'M:\MyProject\BM\bm.ini'
+config = configparser.ConfigParser()
+config.read(confile)
+mailsvr = config['mailsvr']['pop']
+user = config['mailsvr']['user']
+key = config['mailsvr']['key']
+dbfile = config['setting']['dbfile']
+logfilelevel = int(config['setting']['logfilelevel'])
+logfile = config['setting']['log']
+attention = config['setting']['attention']
+
 
 def guess_charset(msg):
     l = mylogger(logfile,logfilelevel,get_funcname()) 
@@ -94,11 +102,6 @@ def read_mail(msg, indent=0):
     
 def get_fav():
     l = mylogger(logfile,logfilelevel,get_funcname())    
-    config = configparser.ConfigParser()
-    config.read(confile)
-    mailsvr = config['mailsvr']['pop']
-    user = config['mailsvr']['user']
-    key = config['mailsvr']['key']
     try:
         M = poplib.POP3_SSL(mailsvr)
     except TimeoutError as e:

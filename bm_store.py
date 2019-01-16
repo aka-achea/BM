@@ -2,19 +2,16 @@
 #coding:utf-8
 # Python3
 
-import sqlite3
+import sqlite3 , sys
 from prettytable import PrettyTable , from_db_cursor
 
 # customized module
 from mylog import get_funcname, mylogger
+from bm_pop import logfile,logfilelevel,dbfile
 
-logfilelevel = 10 # Debug
-logfile = r'M:\MyProject\BM\BM.log'
-dbfile = r'M:\MyProject\BM\bm.db'
 
-class db():
-  
-    def create(self,dbfile):
+class db():  
+    def create(self):
 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()
@@ -30,7 +27,7 @@ class db():
         cursor.close()
         conn.close()
 
-    def insert(self,adic,dbfile):
+    def insert(self,adic):
         l = mylogger(logfile,logfilelevel,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()    
@@ -51,70 +48,90 @@ class db():
         conn.commit()
         conn.close()
 
+    # def q_tag(self,dbfile,tag):
+    #     conn = sqlite3.connect(dbfile)
+    #     cursor = conn.cursor()        
+    #     cmd = 'select title,link from bookmark where tag = "'+tag+'"'
+    #     print(cmd)
+    #     cursor.execute(cmd)
+    #     v = cursor.fetchall()
+    #     cursor.close()
+    #     conn.close()
+    #     return v
 
-    def backup(self,dbfile):
-        pass
+    # def q_source(self,dbfile,source):
+    #     conn = sqlite3.connect(dbfile)
+    #     cursor = conn.cursor()        
+    #     cursor.execute('select title,link from bookmark')
+    #     v = cursor.fetchall()
+    #     cursor.close()
+    #     conn.close()
+    #     return v
 
-    def q_tag(self,dbfile,tag):
-        conn = sqlite3.connect(dbfile)
-        cursor = conn.cursor()        
-        cmd = 'select title,link from bookmark where tag = "'+tag+'"'
-        print(cmd)
-        cursor.execute(cmd)
-        v = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return v
+    # def q_keyword(self,dbfile,keyword):
+    #     conn = sqlite3.connect(dbfile)
+    #     cursor = conn.cursor() 
+    #     cmd = 'select title,link from bookmark where title like "%'+keyword+'%"'
+    #     print(cmd)       
+    #     cursor.execute(cmd)
+    #     v = cursor.fetchall()
+    #     cursor.close()
+    #     conn.close()
+    #     return v  
 
-    def q_source(self,dbfile,source):
-        conn = sqlite3.connect(dbfile)
-        cursor = conn.cursor()        
-        cursor.execute('select title,link from bookmark')
-        v = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return v
+    # def q_t(self,dbfile,keyword):
+    #     conn = sqlite3.connect(dbfile)
+    #     cursor = conn.cursor() 
+    #     cmd = 'select title,link from bookmark where title like "%'+keyword+'%"'
+    #     print(cmd)       
+    #     cursor.execute(cmd)
+    #     v = cursor.fetchall()
+    #     cursor.close()
+    #     conn.close()
+    #     return v  
 
-    def q_keyword(self,dbfile,keyword):
-        conn = sqlite3.connect(dbfile)
-        cursor = conn.cursor() 
-        cmd = 'select title,link from bookmark where title like "%'+keyword+'%"'
-        print(cmd)       
-        cursor.execute(cmd)
-        v = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return v  
+    # def q_a(self,dbfile):
+    #     l = mylogger(logfile,logfilelevel,get_funcname()) 
+    #     conn = sqlite3.connect(dbfile)
+    #     cursor = conn.cursor() 
+    #     cmd = 'select * from bookmark order by title'
+    #     l.debug(cmd)       
+    #     cursor.execute(cmd)
+    #     # v = cursor.fetchall()
+    #     v = from_db_cursor(cursor)
+    #     v.align['title']='l'
+    #     cursor.close()
+    #     conn.close()
+    #     return v  
 
-    def q_t(self,dbfile,keyword):
-        conn = sqlite3.connect(dbfile)
-        cursor = conn.cursor() 
-        cmd = 'select title,link from bookmark where title like "%'+keyword+'%"'
-        print(cmd)       
-        cursor.execute(cmd)
-        v = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return v  
-
-    def q_a(self,dbfile):
+    def query(self,q='',keyword=''):
         l = mylogger(logfile,logfilelevel,get_funcname()) 
+        if q in ['title','link','source','tag','mail','mail','date']:
+            cmd = 'select * from bookmark where '+q+' like "%'+keyword+'%" order by title' 
+        elif keyword =='' and q =='':
+            cmd = 'select * from bookmark'
+        else:
+            l.error('Missing keyword')
+            sys.exit()
         conn = sqlite3.connect(dbfile)
-        cursor = conn.cursor() 
-        cmd = 'select * from bookmark order by title'
-        l.debug(cmd)       
+        cursor = conn.cursor()  
+        l.debug(cmd)
         cursor.execute(cmd)
-        # v = cursor.fetchall()
+        num = len(cursor.fetchall())
+        l.debug(num)
+        if num == 0:
+            l.debug('No Entry find')
+            return False
+        cursor.execute(cmd) # need to improve
         v = from_db_cursor(cursor)
         v.align['title']='l'
         cursor.close()
         conn.close()
         return v  
 
-    def q_custom(self):
-        pass
 
-    def d_title(self,dbfile,keyword):
+
+    def d_title(self,keyword):
         l = mylogger(logfile,logfilelevel,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
@@ -124,7 +141,7 @@ class db():
         cursor.close()
         conn.close()
 
-    def u_tag(self,dbfile,ntag,title):    
+    def u_tag(self,ntag,title):    
         l = mylogger(logfile,logfilelevel,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
@@ -137,9 +154,10 @@ class db():
 if __name__=='__main__':
     db = db()
     # db.create(dbfile)
-    v = db.q_a(dbfile)
+    v = db.query()
     # print(v)
-    print(v.get_string(fields = ['title','time','tag','link']))
+    l = mylogger(logfile,logfilelevel,get_funcname()) 
+    l.info(v.get_string(fields = ['title','time','tag','link']))
 
     # adic = { 'tag': 'test',\
     #      'link': 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg', 'title':\
