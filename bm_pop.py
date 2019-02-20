@@ -2,6 +2,7 @@
 #coding:utf-8
 #Python3
 
+import wget
 
 import poplib,configparser,time
 from email.parser import Parser
