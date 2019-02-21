@@ -1,8 +1,7 @@
 #!/usr/bin/python
 #coding:utf-8
 #Python3
-
-import wget
+#tested in Win
 
 import poplib,configparser,time
 from email.parser import Parser
