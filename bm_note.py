@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #coding:utf-8
-#Python3
+#tested in win
 
 import time
 from bs4 import BeautifulSoup
