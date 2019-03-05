@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #coding:utf-8
-#Python3
+# NOT IN USE
 
 
 import imaplib,configparser,time

@@ -1,6 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #coding:utf-8
-#Python3
 #tested in Win
 
 import poplib,configparser,time

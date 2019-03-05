@@ -6,13 +6,14 @@ tag:
 
 
 module list:
-pop.py - retreive email from 163
-store.py - store data in sqlite
-note.py - main function 
+bm_pop.py - retreive email from 163
+bm_store.py - store data in sqlite
+bm_note.py - main function 
 ut-bm.py - unit test
 
 
 Change log:
+2019.3.5 add support to MONO v1.2
 2019.1.16 optimize log function v1.1
 2019.1.9 optimize DB function v1.0
 2019.1.6 reorg module, add attention list v0.9

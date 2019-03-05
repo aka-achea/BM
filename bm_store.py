@@ -1,6 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #coding:utf-8
-# Python3
 
 import sqlite3 , sys
 from prettytable import PrettyTable , from_db_cursor

@@ -30,9 +30,15 @@ def ana_wx(page):
     l.debug(p)
     return p
 
-
 def ana_mono(page):
-    pass
+    l = mylogger(logfile,logfilelevel,get_funcname())   
+    html = op_simple(page)[0]
+    bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
+    author = bsObj.find('span',{'class':'title'}).text.strip()
+    title = bsObj.find('h1',{'class':'title'}).text.strip()
+    p = {'author':author,'title':title}
+    l.debug(p)
+    return p
 
 # def create_note(page,tag,mail): # return bookmark dictionary
 #     a = {}
@@ -59,6 +65,13 @@ def main():
             if link.split('/')[2] == 'mp.weixin.qq.com':
                 p = ana_wx(link)
                 f['source'] = '微信公众号'
+                f['author'] = p['author']
+                f['title'] = p['title']  
+                l.debug(f)
+                fl[i] = f
+            elif link.split('/')[2] == 'mmmono.com':
+                p = ana_mono(link)
+                f['source'] = 'MONO'
                 f['author'] = p['author']
                 f['title'] = p['title']  
                 l.debug(f)
