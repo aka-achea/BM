@@ -6,7 +6,7 @@ from prettytable import PrettyTable , from_db_cursor
 
 # customized module
 from mylog import get_funcname, mylogger
-from bm_pop import logfile,logfilelevel,dbfile
+from bm_pop import logfile,dbfile
 
 
 class db():  
@@ -27,10 +27,10 @@ class db():
         conn.close()
 
     def insert(self,adic):
-        l = mylogger(logfile,logfilelevel,get_funcname()) 
+        ml = mylogger(logfile,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()    
-        l.debug(adic)    
+        ml.debug(adic)    
         time = adic['date']
         title = adic['title']
         tag = adic['tag']
@@ -41,8 +41,8 @@ class db():
         try:
             cursor.execute("insert into bookmark values (?,?,?,?,?,?,?)",(time,title,tag,author,source,link,mail))
         except sqlite3.IntegrityError as e:
-            l.error(e)
-            l.error('duplicate entry')
+            ml.error(e)
+            ml.error('duplicate entry')
         cursor.close()
         conn.commit()
         conn.close()
@@ -90,7 +90,7 @@ class db():
     #     return v  
 
     # def q_a(self,dbfile):
-    #     l = mylogger(logfile,logfilelevel,get_funcname()) 
+    #     l = mylogger(logfile,get_funcname()) 
     #     conn = sqlite3.connect(dbfile)
     #     cursor = conn.cursor() 
     #     cmd = 'select * from bookmark order by title'
@@ -104,22 +104,22 @@ class db():
     #     return v  
 
     def query(self,q='',keyword=''):
-        l = mylogger(logfile,logfilelevel,get_funcname()) 
+        ml = mylogger(logfile,get_funcname()) 
         if q in ['title','link','source','tag','mail','mail','date']:
             cmd = 'select * from bookmark where '+q+' like "%'+keyword+'%" order by title' 
         elif keyword =='' and q =='':
             cmd = 'select * from bookmark'
         else:
-            l.error('Missing keyword')
+            ml.error('Missing keyword')
             sys.exit()
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()  
-        l.debug(cmd)
+        ml.debug(cmd)
         cursor.execute(cmd)
         num = len(cursor.fetchall())
-        l.debug(num)
+        ml.debug(num)
         if num == 0:
-            l.debug('No Entry find')
+            ml.debug('No Entry find')
             return False
         cursor.execute(cmd) # need to improve
         v = from_db_cursor(cursor)
@@ -131,21 +131,21 @@ class db():
 
 
     def d_title(self,keyword):
-        l = mylogger(logfile,logfilelevel,get_funcname()) 
+        ml = mylogger(logfile,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'delete from bookmark where title like "%'+keyword+'%"'
-        l.debug(cmd)       
+        ml.debug(cmd)       
         cursor.execute(cmd)
         cursor.close()
         conn.close()
 
     def u_tag(self,ntag,title):    
-        l = mylogger(logfile,logfilelevel,get_funcname()) 
+        ml = mylogger(logfile,get_funcname()) 
         conn = sqlite3.connect(dbfile)
         cursor = conn.cursor() 
         cmd = 'update bookmark set tag = "'+ntag+'" where title like "%'+keyword+'%"'
-        l.debug(cmd)       
+        ml.debug(cmd)       
         cursor.execute(cmd)
         cursor.close()
         conn.close()
@@ -155,8 +155,8 @@ if __name__=='__main__':
     # db.create(dbfile)
     v = db.query()
     # print(v)
-    l = mylogger(logfile,logfilelevel,get_funcname()) 
-    l.info(v.get_string(fields = ['title','time','tag','link']))
+    ml = mylogger(logfile,get_funcname()) 
+    ml.info(v.get_string(fields = ['title','time','tag','link']))
 
     # adic = { 'tag': 'test',\
     #      'link': 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg', 'title':\

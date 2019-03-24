@@ -11,12 +11,12 @@ from html.parser import HTMLParser
 # from modstr import modificate
 from openlink import op_simple
 from bm_store import db
-from bm_pop import get_fav,logfile,logfilelevel,dbfile,attention
+from bm_pop import get_fav,logfile,dbfile,attention
 from mylog import get_funcname,mylogger
 
 
 def ana_wx(page):
-    l = mylogger(logfile,logfilelevel,get_funcname())   
+    ml = mylogger(logfile,get_funcname())   
     html = op_simple(page)[0]
     # print(html)
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
@@ -27,17 +27,17 @@ def ana_wx(page):
     title = title.text.strip()
     p = {'author':author,'title':title}
     # p['link'] = page
-    l.debug(p)
+    ml.debug(p)
     return p
 
 def ana_mono(page):
-    l = mylogger(logfile,logfilelevel,get_funcname())   
+    ml = mylogger(logfile,get_funcname())   
     html = op_simple(page)[0]
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
     author = bsObj.find('span',{'class':'title'}).text.strip()
     title = bsObj.find('h1',{'class':'title'}).text.strip()
     p = {'author':author,'title':title}
-    l.debug(p)
+    ml.debug(p)
     return p
 
 # def create_note(page,tag,mail): # return bookmark dictionary
@@ -53,8 +53,8 @@ def ana_mono(page):
 #     return a
 
 def main():
-    l = mylogger(logfile,logfilelevel,get_funcname())  
-    l.debug('Query Email')
+    ml = mylogger(logfile,get_funcname())  
+    ml.debug('Query Email')
     ff = get_fav()
     fl = {}  # favor list
     num = len(ff)+1    
@@ -67,24 +67,24 @@ def main():
                 f['source'] = '微信公众号'
                 f['author'] = p['author']
                 f['title'] = p['title']  
-                l.debug(f)
+                ml.debug(f)
                 fl[i] = f
             elif link.split('/')[2] == 'mmmono.com':
                 p = ana_mono(link)
                 f['source'] = 'MONO'
                 f['author'] = p['author']
                 f['title'] = p['title']  
-                l.debug(f)
+                ml.debug(f)
                 fl[i] = f
             else:
-                l.warning('Need to check source')
+                ml.warning('Need to check source')
                 fl[i] = f
         else:
             # l.debug('Empty link Email from: '+f['mail'])
             fl[i] = f
 
-    l.debug('Full list: '+str(fl))
-    l.debug('store in DB')
+    ml.debug('Full list: '+str(fl))
+    ml.debug('store in DB')
     d = db()
     num = len(fl)+1    
     for i in range(1,num):        
@@ -92,7 +92,7 @@ def main():
         if 'link' in f.keys():     
             d.insert(f)
         else:
-            l.debug('Empty link Email from: '+f['mail'])
+            ml.debug('Empty link Email from: '+f['mail'])
             b = f['mail']
             with open(attention,'a') as f:                
                 f.write('Empty link Email from: '+b+'\n')
