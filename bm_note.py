@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 
 # customized module
 # from modstr import modificate
-from openlink import op_simple
+from openlink import op_simple,ran_header
 from bm_store import db
 from bm_pop import get_fav,logfile,dbfile,attention
 from mylog import get_funcname,mylogger
@@ -17,7 +17,7 @@ from mylog import get_funcname,mylogger
 
 def ana_wx(page):
     ml = mylogger(logfile,get_funcname())   
-    html = op_simple(page)[0]
+    html = op_simple(page,ran_header())[0]
     # print(html)
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
     # bsObj = BeautifulSoup(html,"html5lib") #;print(bsObj)
@@ -32,7 +32,7 @@ def ana_wx(page):
 
 def ana_mono(page):
     ml = mylogger(logfile,get_funcname())   
-    html = op_simple(page)[0]
+    html = op_simple(page,ran_header())[0]
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
     author = bsObj.find('span',{'class':'title'}).text.strip()
     title = bsObj.find('h1',{'class':'title'}).text.strip()
