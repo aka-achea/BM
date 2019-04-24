@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
@@ -20,11 +20,11 @@ bootstrap = Bootstrap(app)
 # def internal_server_error(e):
 #     return render_template('500.html'), 500
 
-a = [('史','history'),('food','食'),('geography','地')]
+a = [('history','史'),('food','食'),('geography','地')]
 
 class NameForm(FlaskForm):
     keyword = StringField('请输入关键字查询', validators=[Optional()])
-    tag = SelectField('标签', choices=a)
+    tag = SelectField('标签',validators=[Optional()], choices=a)
     submit = SubmitField('搜')
 
 
