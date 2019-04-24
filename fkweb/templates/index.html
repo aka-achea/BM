@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Note{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='daka.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='daka.ico') }}" type="image/x-icon">
+{% endblock %}
+
+
+{% block navbarbrand %}
+<a class="navbar-brand" href="/">Private Note</a>
+{% endblock %}
+
+{% block login %}
+<li><a href="/">Login</a></li>
+{% endblock %}
+
+{% block page_content %}
+<!-- <div class="page-header">
+    <h3></h3>
+</div> -->
+{{ wtf.quick_form(form) }}
+{% endblock %}
