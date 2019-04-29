@@ -14,6 +14,9 @@ ut-bm.py - unit test
 
 Change log:
 
+2019.4.29 use flask_sqlalchemy v1.6
+2019.4.20 build SQLAlchemy model v1.5
+2019.4.12 build basic flask web v1.4
 2019.3.24 apply PEP8 v1.3
 2019.3.5 add support to MONO v1.2
 2019.1.16 optimize log function v1.1

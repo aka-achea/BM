@@ -2,73 +2,162 @@
 #coding:utf-8
 #tested in win
 
+
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, ForeignKey,func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
-
-# customized module
-# from mylog import get_funcname, mylogger
-# from bm_pop import logfile,dbfile
-
-
 Base = declarative_base()
-
 
 class Tag(Base):
     __tablename__ = 'tags'
     id = Column(Integer,primary_key=True)
-    name = Column(String(8))
-    # article = relationship('Article')
+    name = Column(String(8),unique=True,nullable=False)
 
-    # def __repr__(self):
-    #     return f'<{self.id} = {self.name}>'
+    def __repr__(self):
+        return f'<{self.id} : {self.name}>'
+
+
+class Source(Base):
+    __tablename__ = 'sources'
+    id = Column(Integer,primary_key=True)
+    name = Column(String(16),unique=True,nullable=False)
+
+    def __repr__(self):
+        return f'<{self.id} : {self.name}>'
 
 
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer,primary_key=True)
-    email = Column(String(64))
-    name = Column(String(15))
-    article = relationship('Article',backref='user')
+    email = Column(String(64),unique=True,nullable=False)
+    name = Column(String(15),unique=True,nullable=False)
 
-    # def __repr__(self):
-    #     return f'<User {self.name} Email Address is {self.email}>'
+    def __repr__(self):
+        return f'<{self.name} : {self.email}>'
+
 
 class Article(Base):
     __tablename__ = 'articles'
     id = Column(Integer,primary_key=True)
     timestamp = Column(String(100))
-    title = Column(String(64))
-    # link = Column(String(1000))
-    # source = Column(String(64))
+    title = Column(String(64),nullable=False,index=True)
+    link = Column(String(1000),nullable=False,index=True)
+    tag_id = Column(String(20),ForeignKey('tags.id'),nullable=False)
+    tag = relationship('Tag',backref='articles')
+    src_id = Column(String(20),ForeignKey('sources.id'),nullable=False)
+    src = relationship('Source',backref='articles')
+    user_id = Column(String(20),ForeignKey('users.id'),nullable=False) 
+    user = relationship('User',backref='articles')
 
-    # tag_id = Column(String(20),ForeignKey('tags.id'))
-    user_email = Column(String(20),ForeignKey('users.email'))
+    def __repr__(self):
+        return f'<{self.title} : {self.tag.name} : {self.user.name}>'
 
-    # def __repr__(self):
-    #     return f'<Article name = {self.title}>'
+
+class DataBase():
+    def __init__(self,dbfile):
+        engine = create_engine(r'sqlite:///'+dbfile)
+        DBSession = sessionmaker(bind=engine)
+        self.session = DBSession()        
+
+    def reset_db(self):
+        pass
+
+    def query_tagid(self,tagname):
+        return self.session.query(Tag).filter_by(name=tagname).first().id
+
+    def query_userid(self,username):
+        return self.session.query(User).filter_by(name=username).first().id
+
+    def query_srcid(self,sourcename):
+        return self.session.query(Source).filter_by(name=sourcename).first().id
+
+    def query_article_bytitle(self,user,title):
+        u = self.session.query(User).filter_by(name=user).first()
+        articles = []
+        for f in u.articles:
+            if title in f.title:
+                articles.append(f)
+        return articles
+
+    def insert_src(self,sourcename):
+        s = Source(name=sourcename)
+        self.session.add(s)
+        self.session.commit()
+
+    def insert_tag(self,tagname):
+        t = Tag(name=tagname)
+        self.session.add(t)
+        self.session.commit()   
+
+    def insert_user(self,email,username):
+        u = User(email=email,name=username)
+        self.session.add(u)
+        self.session.commit()  
+
+    def insert_article(self,article_dict):
+        timestamp = article_dict['timestamp']
+        title = article_dict['title']
+        tagid = self.query_tagid(article_dict['tag'])
+        userid = self.query_userid(article_dict['user'])
+        link = article_dict['link']
+        src_id = self.query_srcid(article_dict['source'])
+        article = Article(timestamp=timestamp,title=title,tag_id=tagid,user_id=userid,link=link,src_id=src_id)
+        self.session.add(article)
+        self.session.commit()
+
+
+def test():
+    # test case
+    db = DataBase(dbfile)
+    for x in ['t1','t2','t3']:
+        db.insert_tag(x)
+    for s in ['wx','mm']:
+        db.insert_src(s)
+    for u in [('u1@h.com','u1'),('u2@h.com','u2')]:
+        db.insert_user(email=u[0],username=u[1])
+
+    t = db.session.query(Tag).all()
+    print(t)
+    u = db.session.query(User).all()
+    print(u)
+    s = db.session.query(Source).all()
+    print(s)
+
+    a1 = {'timestamp':func.now(),'title':'testtitle','tag':'t1','user':'u2','link':'aaaaa','source':'mm'}
+    db.insert_article(a1)
+    a = db.query_article_bytitle('u2','test')
+    print(a)
+
+    for x in a:
+        print(x.link)
 
 if __name__ == "__main__":
-    engine = create_engine(r'sqlite:///E:\test.db')
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
+    import os
+    dbfile = r'C:\D\GitHub\BM\fkweb\note.sqlite'
+    # os.remove(dbfile)
 
-    # Tag.__tablename__
-    Base.metadata.create_all(engine)
-    # tag1 = Tag(id=2,name='GgG')
-    u1 = User(email='u1@h.com',name='u1')
-    session.add(u1)
- 
+    # engine = create_engine(r'sqlite:///'+dbfile)
+    # DBSession = sessionmaker(bind=engine)
+    # session = DBSession()
+    # Base.metadata.create_all(engine)  # create table
 
-    a1 = Article(timestamp=func.now(),title='a1',user_email='u1@h.com')
-    session.add(a1)
+    # test(session)
 
-    session.commit()
+    db = DataBase(dbfile)
 
-    u = session.query(User).first()
-    print(u.article)
-    a = session.query(Article).first()
-    print(a.user_email)
-    # print(u.article.title)
+    # t = db.session.query(Tag).all()
+    # print(t)
+    # u = db.session.query(User).all()
+    # print(u)
+    # s = db.session.query(Source).all()
+    # print(s)
+
+    a1 = {'timestamp':func.now(),'title':'试验','tag':'历史','user':'jc','link':'bbbb','source':'mm'}
+    db.insert_article(a1)
+    # a = db.query_article_bytitle('jc','测试')
+    # print(a[0].link)
+
+    a = db.session.query(Article).all()
+    print(a)
