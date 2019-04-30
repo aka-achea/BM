@@ -6,7 +6,8 @@
     <head>
         {%- block head %}
         <title>{% block title %}{{title|default}}{% endblock title %}</title>
-
+        <link rel="shortcut icon" href="{{ url_for('static', filename='daka.ico') }}" type="image/x-icon">
+        <link rel="icon" href="{{ url_for('static', filename='daka.ico') }}" type="image/x-icon">
         {%- block metas %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {%- endblock metas %}
