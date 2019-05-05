@@ -6,6 +6,11 @@ from ..models import User
 from .forms import LoginForm, RegistrationForm
 
 
+from mylog import myfilelog,get_funcname
+
+
+
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()

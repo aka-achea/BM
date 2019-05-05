@@ -5,8 +5,6 @@ from wtforms import ValidationError
 from ..models import User
 
 
-from mylog import myfilelog,get_funcname
-
 
 class LoginForm(FlaskForm):
     email = StringField('邮箱', validators=[DataRequired(), Length(1, 64),

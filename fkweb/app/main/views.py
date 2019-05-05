@@ -9,7 +9,13 @@ from flask_login import login_required
 def index():
     # keyword = None
     # tag = None
-    form = QueryForm()
+
+    tags = Tag.query.all()
+    choice = [] #(data,displayname)
+    for t in tags:
+        choice.append((str(t.id),t.name))
+
+    form = QueryForm(choice)
     if request.method == 'POST' and form.validate_on_submit():     
         tag = Tag.query.filter_by(id=int(form.tag.data)).first()
         result = []
