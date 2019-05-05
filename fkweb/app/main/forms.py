@@ -15,4 +15,4 @@ class QueryForm(FlaskForm):
     def __init__(self,choice):
         self.keyword = StringField('请输入关键字查询', validators=[Optional()])
         self.tag = SelectField('标签',validators=[Optional()], choices=choice)
-        submit = SubmitField('搜')
+        self.submit = SubmitField('搜')
