@@ -59,7 +59,7 @@ class Article(db.Model): # duo
     user = db.relationship('User',backref='articles')
 
     def __repr__(self):
-        return f'<{self.title} : {self.tag.name} : {self.user.name}>'
+        return f'<{self.title} : {self.tag.name} : {self.user.name} : {self.src.name}>'
 
 
 @login_manager.user_loader

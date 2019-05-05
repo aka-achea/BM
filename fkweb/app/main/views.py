@@ -3,7 +3,7 @@ from .. import db
 from ..models import Tag
 from . import main
 from .forms import QueryForm
-
+from flask_login import login_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -28,3 +28,9 @@ def index():
         tag=session.get('tag'), 
         # result = session.get('result') 
         )
+
+
+@main.route('/secrete')
+@login_required
+def s():
+    return 'login pls'

@@ -6,7 +6,6 @@ from app.models import Tag,Source,User,Article
 
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-app.app_context().push()
 
 
 @app.shell_context_processor

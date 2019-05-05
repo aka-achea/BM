@@ -15,9 +15,9 @@
 
 {% block login %}
 {% if current_user.is_authenticated %}
-<li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+    <li><a href="{{ url_for('auth.logout') }}">注销</a></li>
 {% else %}
-<li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+    <li><a href="{{ url_for('auth.login') }}">登录</a></li>
 {% endif %}
 {% endblock %}
 
@@ -34,6 +34,13 @@
         <li href='{{ a.link }}'>{{a.title}}</li>
     {% endfor %} -->
 
-    test
+    <h1>Hello, 
+        {% if current_user.is_authenticated %}
+            {{current_user.name}}
+        {% else %}
+            Stranger        
+        {% endif %}!
+    </h1>
+
 </div>
 {% endblock %}

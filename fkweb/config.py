@@ -1,4 +1,12 @@
-import os
+
+import sys,os
+
+logfile = 'note.log'
+if sys.platform == 'win32':
+    path = 'E:'
+else:
+    path = '/var/log'
+logfile = os.path.join(path,logfile) 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -43,3 +51,4 @@ config = {
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
+
