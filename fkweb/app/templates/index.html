@@ -27,20 +27,20 @@
 
 
 {% block page_content %}
-
 {{ wtf.quick_form(form) }}
-<div class="page-header">
-    <!-- {% for r in result %}
-        <li href='{{ a.link }}'>{{a.title}}</li>
-    {% endfor %} -->
 
-    <h1>Hello, 
+<div class="page_content">
+
         {% if current_user.is_authenticated %}
-            {{current_user.name}}
+            关键词 {{keyword}} 标签 {{tag}} 搜索结果:
+            <br>
+            <div class="post">
+                {{result}}
+            </div>
+
+
         {% else %}
             Stranger        
-        {% endif %}!
-    </h1>
-
+        {% endif %}
 </div>
 {% endblock %}

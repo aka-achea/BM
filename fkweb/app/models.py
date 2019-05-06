@@ -28,6 +28,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True)
     name = db.Column(db.String(15), unique=True)
     password_hash = db.Column(db.String(128))
+    # taglist = db.Column()
 
 
     @property
@@ -57,6 +58,18 @@ class Article(db.Model): # duo
     src = db.relationship('Source',backref='articles')
     user_id = db.Column(db.String(20),db.ForeignKey('users.id'),nullable=False) 
     user = db.relationship('User',backref='articles')
+
+
+    def to_dict(self):
+        d_article = {
+            'title':self.title,
+            'link':self.link,
+            'tag':self.tag.name,
+            'source':self.src.name,
+            'user':self.user.name
+        }
+        return d_article
+
 
     def __repr__(self):
         return f'<{self.title} : {self.tag.name} : {self.user.name} : {self.src.name}>'

@@ -33,7 +33,7 @@ class User(Base):
     id = Column(Integer,primary_key=True)
     email = Column(String(64),unique=True,nullable=False)
     name = Column(String(15),unique=True,nullable=False)
-    password_hash = db.Column(db.String(128),nullable=False)
+    password_hash = Column(String(128),nullable=False)
 
 
     def __repr__(self):
@@ -75,7 +75,7 @@ class DataBase():
     def query_srcid(self,sourcename):
         return self.session.query(Source).filter_by(name=sourcename).first().id
 
-    def query_article_bytitle(self,user,title):
+    def query_userarticle_bytitle(self,user,title):
         u = self.session.query(User).filter_by(name=user).first()
         articles = []
         for f in u.articles:
@@ -129,7 +129,7 @@ def test():
 
     a1 = {'timestamp':func.now(),'title':'testtitle','tag':'t1','user':'u2','link':'aaaaa','source':'mm'}
     db.insert_article(a1)
-    a = db.query_article_bytitle('u2','test')
+    a = db.query_userarticle_bytitle('u2','test')
     print(a)
 
     for x in a:
@@ -158,8 +158,13 @@ if __name__ == "__main__":
 
     # a1 = {'timestamp':func.now(),'title':'试验','tag':'历史','user':'jc','link':'bbbb','source':'mm'}
     # db.insert_article(a1)
-    # a = db.query_article_bytitle('jc','测试')
+    # a = db.query_userarticle_bytitle('xx','测试')
     # print(a[0].link)
 
-    a = db.session.query(Tag).all()
-    print(a)
+    # a = db.session.query(Tag).all()
+    # print(a)
+
+    u = db.session.query(User).filter_by(name='xx').first()
+    for a in u.articles:
+        if a.tag.name == '笑话' and 't' in a.title:
+            print(a)
