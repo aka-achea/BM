@@ -10,7 +10,7 @@
 
 
 {% block navbarbrand %}
-<a class="navbar-brand" href="{{ url_for('main.index') }}">Private Note</a>
+<a class="navbar-brand" href="{{ url_for('main.index') }}">{{current_user.name}}'s Private Note</a>
 {% endblock %}
 
 {% block login %}
@@ -35,7 +35,7 @@
             关键词 {{keyword}} 标签 {{tag}} 搜索结果:
             <br>
             <div class="post">
-                {{result}}
+                {{ result }}
             </div>
 
 

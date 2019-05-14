@@ -1,7 +1,7 @@
 
 import sys,os
 
-logfile = 'note.log'
+logfile = 'web.log'
 if sys.platform == 'win32':
     path = 'E:'
 else:

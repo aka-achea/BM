@@ -137,7 +137,7 @@ def test():
 
 if __name__ == "__main__":
     import os
-    dbfile = r'C:\D\GitHub\BM\fkweb\note-dev.sqlite'
+    dbfile = r'C:\Business\GitHub\BM\fkweb\note-dev.sqlite'
     # os.remove(dbfile)
 
     # engine = create_engine(r'sqlite:///'+dbfile)
@@ -156,15 +156,15 @@ if __name__ == "__main__":
     # s = db.session.query(Source).all()
     # print(s)
 
-    # a1 = {'timestamp':func.now(),'title':'试验','tag':'历史','user':'jc','link':'bbbb','source':'mm'}
-    # db.insert_article(a1)
+    a1 = {'timestamp':func.now(),'title':'test he int','tag':'历史','user':'a','link':'nmb','source':'mm'}
+    db.insert_article(a1)
     # a = db.query_userarticle_bytitle('xx','测试')
     # print(a[0].link)
 
     # a = db.session.query(Tag).all()
     # print(a)
 
-    u = db.session.query(User).filter_by(name='xx').first()
+    u = db.session.query(User).filter_by(name='a').first()
     for a in u.articles:
-        if a.tag.name == '笑话' and 't' in a.title:
-            print(a)
+        # if a.tag.name == '笑话' and 't' in a.title:
+        print(a)

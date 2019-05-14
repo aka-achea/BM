@@ -6,7 +6,32 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import config,logfile
 
-from mylog import myfilelog,get_funcname
+
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {
+        'wsgi': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://flask.logging.wsgi_errors_stream',
+            'formatter': 'default' 
+        },
+        'file':{
+            'class': 'logging.FileHandler',
+            'filename':logfile,
+            'formatter':'default'
+        }
+    },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
+
 
 bootstrap = Bootstrap()
 # mail = Mail()
@@ -20,7 +45,10 @@ login_manager.login_view = 'auth.login'
 def create_app(config_name):
     
     app = Flask(__name__)
+    app.logger.info('starting...')
     app.config.from_object(config[config_name])
+    app.config['JSON_AS_ASCII'] = False
+
     config[config_name].init_app(app)
 
     bootstrap.init_app(app)

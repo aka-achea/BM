@@ -2,7 +2,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import db, login_manager
-
+from flask import jsonify
 
 class Tag(db.Model):
     __tablename__ = 'tags'
@@ -60,7 +60,7 @@ class Article(db.Model): # duo
     user = db.relationship('User',backref='articles')
 
 
-    def to_dict(self):
+    def to_json(self):
         d_article = {
             'title':self.title,
             'link':self.link,
@@ -68,7 +68,7 @@ class Article(db.Model): # duo
             'source':self.src.name,
             'user':self.user.name
         }
-        return d_article
+        return jsonify(d_article)
 
 
     def __repr__(self):
