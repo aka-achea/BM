@@ -19,11 +19,28 @@ def index():
     form = QueryForm()
     form.tag.choices = choice
     print(choice)
+    
     if request.method == 'POST' and form.validate_on_submit():  
         print(current_user)
-
+        session['keyword'] = form.keyword.data
+        session['tagid'] = form.tag.data
+        form.keyword.data = ''     
+        return redirect(url_for('.index'))
         
-        # ua = Article.query.filter_by(user_id=current_user.id)
+    print(session.get('keyword'))  
+    print(session.get('tagid'))
+    tagid = session.get('tagid')
+    keyword = session.get('keyword')
+    fs = Article.query.filter_by(user_id=current_user.id,tag_id=int(tagid))
+    if keyword != '':
+        posts = fs.filter(Article.title.like(f'%{keyword}%')).all()
+        print(posts)
+
+    else:
+        print('no keyword')
+        posts = fs.all()
+        print(posts)
+
         # # tag = Tag.query.filter_by(id=int(form.tag.data)).first()
         # result = []
         # for a in ua:
@@ -35,20 +52,15 @@ def index():
         # print(result)     
         # session['result'] = result
 
-        ua = Article.query.filter_by(user_id=current_user.id)
+
+        # ua = Article.query.filter_by(user_id=current_user.id).all()
+        # print(ua)
         # ua = ua.filter_by(tag=)
 
-
-        session['keyword'] = form.keyword.data
-        session['tag'] = tag.name
-
-        form.keyword.data = ''
-        return redirect(url_for('.index'))
-
-
-    return render_template('index.html', form=form, a=ua,
-        keyword=session.get('keyword'), 
-        tag=session.get('tag')
+ 
+    return render_template('index.html', form=form,posts=posts,
+        keyword=session.get('keyword'),
+        tag=session.get('tagid')
         # result = session.get('result') 
         )
 

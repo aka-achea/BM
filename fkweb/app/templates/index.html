@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+<!-- {% import "bootstrap/wtf.html" as wtf %} -->
+<!-- {% import "qform.html" as wtf %} -->
 
 {% block title %}Note{% endblock %}
 
@@ -23,20 +24,43 @@
 
 
 
-
-
-
 {% block page_content %}
-{{ wtf.quick_form(form) }}
+<!-- {{ wtf.quick_form(form) }} -->
+
+
+<form class="form form-inline" method="post" role="form">
+        <!-- {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, hiddens="only") }}
+       -->
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.keyword, form_type="basic") }}
+        {{ wtf.form_field(form.tag, form_type="basic") }}
+        {{ wtf.form_field(form.submit) }}
+
+        <!-- <input type="submit" value=""> -->
+</form>
+
 
 <div class="page_content">
 
         {% if current_user.is_authenticated %}
-            关键词 {{keyword}} 标签 {{tag}} 搜索结果:
             <br>
-            <div class="post">
-                {{ result }}
+            <div class="comment">
+                关键词  {{keyword}}  标签  {{tag}} 搜索结果:
             </div>
+            <br>
+            
+            <a class="post">
+                {% for post in posts %}
+                <div class="post">
+                    <div class="post-content">
+                        <a href="{{ post.link }}">
+                            <b>{{ post.title }}</b> 
+                        </a>                        
+                    </div>
+                </div>
+                {% endfor %}
+            </a>
 
 
         {% else %}

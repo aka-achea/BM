@@ -156,8 +156,9 @@ if __name__ == "__main__":
     # s = db.session.query(Source).all()
     # print(s)
 
-    a1 = {'timestamp':func.now(),'title':'test he int','tag':'历史','user':'a','link':'nmb','source':'mm'}
+    a1 = {'timestamp':func.now(),'title':'hgaeh','tag':'历史','user':'a','link':'sgese','source':'wx'}
     db.insert_article(a1)
+
     # a = db.query_userarticle_bytitle('xx','测试')
     # print(a[0].link)
 
