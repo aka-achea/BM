@@ -13,6 +13,7 @@ def index():
     # ml = myfilelog(logfile,get_funcname()) 
     tags = Tag.query.all()
     choice = [] #(data,displayname)
+    
     for t in tags:
         choice.append((str(t.id),t.name))
     
