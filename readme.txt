@@ -1,8 +1,8 @@
 Personal favorite article
 
 tag:
-食物、玩乐、旅游、计算机、史学、笑话、地理、生活、测试、健康、科学、经济、python
-食玩旅计史笑地生测健科经p
+食物、玩乐、旅游、计算机、史学、笑话、地理、生活、测试、健康、科学、经济、文化、杂谈、python
+食玩旅计史笑地生测健文杂科经p
 
 
 module list:
@@ -14,6 +14,8 @@ ut-bm.py - unit test
 
 Change log:
 
+2019.5.21 data migration v1.8
+2019.5.20 update function for data input v1.7
 2019.4.29 use flask_sqlalchemy v1.6
 2019.4.20 build SQLAlchemy model v1.5
 2019.4.12 build basic flask web v1.4

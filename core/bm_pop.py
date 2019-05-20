@@ -2,23 +2,24 @@
 #coding:utf-8
 #tested in Win
 
-import poplib,configparser,time
+import poplib,time
 from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr,parsedate,parsedate_to_datetime
 
 # customized module
 from mylog import get_funcname, mylogger
+from config import mailsvr,user,key,dbfile,logfile
 
-confile = r'M:\MyProject\BM\bm.ini'
-config = configparser.ConfigParser()
-config.read(confile)
-mailsvr = config['mailsvr']['pop']
-user = config['mailsvr']['user']
-key = config['mailsvr']['key']
-dbfile = config['setting']['dbfile']
-logfile = config['setting']['log']
-attention = config['setting']['attention']
+# confile = r'M:\MyProject\BM\bm.ini'
+# config = configparser.ConfigParser()
+# config.read(confile)
+# mailsvr = config['mailsvr']['pop']
+# user = config['mailsvr']['user']
+# key = config['mailsvr']['key']
+# dbfile = config['setting']['dbfile']
+# logfile = config['setting']['log']
+# attention = config['setting']['attention']
 
 
 def guess_charset(msg):
