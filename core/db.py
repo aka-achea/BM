@@ -46,6 +46,7 @@ class Article(Base):
     timestamp = Column(String(100))
     title = Column(String(64),nullable=False,index=True)
     link = Column(String(1000),nullable=False,index=True)
+    author = Column(String(20),nullable=True,index=True)
     tag_id = Column(String(20),ForeignKey('tags.id'),nullable=False)
     tag = relationship('Tag',backref='articles')
     src_id = Column(String(20),ForeignKey('sources.id'),nullable=False)
@@ -138,12 +139,13 @@ def test():
 if __name__ == "__main__":
     import os
     dbfile = r'C:\Business\GitHub\BM\fkweb\note-dev.sqlite'
+    dbfile = r'M:\GH\BM\fkweb\note-dev.sqlite'
     # os.remove(dbfile)
 
-    # engine = create_engine(r'sqlite:///'+dbfile)
-    # DBSession = sessionmaker(bind=engine)
-    # session = DBSession()
-    # Base.metadata.create_all(engine)  # create table
+    engine = create_engine(r'sqlite:///'+dbfile)
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    Base.metadata.create_all(engine)  # create table
 
     # test(session)
 
@@ -156,8 +158,8 @@ if __name__ == "__main__":
     # s = db.session.query(Source).all()
     # print(s)
 
-    a1 = {'timestamp':func.now(),'title':'hgaeh','tag':'历史','user':'a','link':'sgese','source':'wx'}
-    db.insert_article(a1)
+    # a1 = {'timestamp':func.now(),'title':'hgaeh','tag':'历史','user':'a','link':'sgese','source':'wx'}
+    # db.insert_article(a1)
 
     # a = db.query_userarticle_bytitle('xx','测试')
     # print(a[0].link)
@@ -165,7 +167,7 @@ if __name__ == "__main__":
     # a = db.session.query(Tag).all()
     # print(a)
 
-    u = db.session.query(User).filter_by(name='a').first()
-    for a in u.articles:
-        # if a.tag.name == '笑话' and 't' in a.title:
-        print(a)
+    # u = db.session.query(User).filter_by(name='a').first()
+    # for a in u.articles:
+    #     # if a.tag.name == '笑话' and 't' in a.title:
+    #     print(a)

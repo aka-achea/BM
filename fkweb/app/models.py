@@ -52,6 +52,7 @@ class Article(db.Model): # duo
     timestamp = db.Column(db.String(100), index=True)
     title = db.Column(db.String(64), index=True)
     link = db.Column(db.String(1000), index=True)
+    author = db.Column(db.String(20),index=True)
     tag_id = db.Column(db.String(20),db.ForeignKey('tags.id'),nullable=False)
     tag = db.relationship('Tag',backref='articles')
     src_id = db.Column(db.String(20),db.ForeignKey('sources.id'),nullable=False)
@@ -64,6 +65,7 @@ class Article(db.Model): # duo
         d_article = {
             'title':self.title,
             'link':self.link,
+            'author':self.author,
             'tag':self.tag.name,
             'source':self.src.name,
             'user':self.user.name

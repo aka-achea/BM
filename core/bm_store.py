@@ -118,7 +118,8 @@ class db():
         cursor = conn.cursor()  
         ml.debug(cmd)
         cursor.execute(cmd)
-        num = len(cursor.fetchall())
+        content = cursor.fetchall()
+        num = len(content)
         ml.debug(num)
         if num == 0:
             ml.debug('No Entry find')
@@ -130,6 +131,16 @@ class db():
         conn.close()
         return v  
 
+    def export2csv(self,csv):
+        cmd = 'select * from bookmark'
+        conn = sqlite3.connect(dbfile)
+        cursor = conn.cursor()  
+        cursor.execute(cmd)
+        content = cursor.fetchall() 
+        with open(csv,'a',encoding='utf-8') as f:   
+            for c in content:
+                line = '{},{},{},{},{},{},{}'.format(c[0],c[1],c[2],c[3],c[4],c[5],c[6]) 
+                f.write(line+'\n')
 
 
     def d_title(self,keyword):
@@ -158,8 +169,9 @@ if __name__=='__main__':
     v = db.query()
     # print(v)
     ml = mylogger(logfile,get_funcname()) 
-    ml.info(v.get_string(fields = ['title','time','tag','link']))
-
+    # ml.info(v.get_string(fields = ['title','time','tag','link','source','author','mail']))
+    csv = r'n:\t.csv'
+    db.export2csv(csv)
     # adic = { 'tag': 'test',\
     #      'link': 'https://mp.weixin.qq.com/s/-O2wEBNQmj1MoTC1fnwECg', 'title':\
     #      '真正的移动开发者，该如何直面App的崩溃率', 'source': 'InfoQ','mail':'a@14.com'}
