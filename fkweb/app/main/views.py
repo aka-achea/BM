@@ -10,12 +10,11 @@ from flask_login import login_required,current_user
 @login_required
 def index():
 
-    # ml = myfilelog(logfile,get_funcname()) 
     tags = Tag.query.all()
     choice = [] #(data,displayname)
     
     for t in tags:
-        choice.append((str(t.id),t.name))
+        choice.append((str(t.id),t.fullname))
     
     form = QueryForm()
     form.tag.choices = choice

@@ -12,7 +12,8 @@ from .forms import LoginForm, RegistrationForm
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        email = form.email.data
+        user = User.query.filter_by(email=email.upper()).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             next = request.args.get('next')

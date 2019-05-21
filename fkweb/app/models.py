@@ -8,18 +8,20 @@ class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(8), unique=True)
+    fullname = db.Column(db.String(8),unique=True)
 
     def __repr__(self):
-        return f'<{self.id} : {self.name}>'
+        return f'<{self.id} : {self.fullname}>'
 
 
 class Source(db.Model):
     __tablename__ = 'sources'
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(16),unique=True)
+    fullname = db.Column(db.String(16),unique=True)
 
     def __repr__(self):
-        return f'<{self.id} : {self.name}>'
+        return f'<{self.id} : {self.fullname}>'
 
 
 class User(UserMixin, db.Model):
