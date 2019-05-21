@@ -9,7 +9,7 @@ from email.utils import parseaddr,parsedate,parsedate_to_datetime
 
 # customized module
 from mylog import get_funcname, mylogger
-from config import mailsvr,user,key,dbfile,logfile
+from config import mailsvr,user,key,logfile
 
 # confile = r'M:\MyProject\BM\bm.ini'
 # config = configparser.ConfigParser()
@@ -54,7 +54,7 @@ def read_mail(msg, indent=0):
                     ml.debug('Look for FROM address')
                     hdr, addr = parseaddr(value)
                     ml.debug(addr)
-                    f['mail']=addr
+                    f['email']=addr
                 elif header=='Subject':
                     ml.debug('Look for TAG')
                     value = decode_str(value)
@@ -65,7 +65,7 @@ def read_mail(msg, indent=0):
                     ml.debug('Look for DATE')
                     mdate = time.strftime('%Y-%m-%d %H:%M:%S',parsedate(value))
                     ml.debug(mdate)
-                    f['date'] = mdate
+                    f['timestamp'] = mdate
                 else:
                     ml.debug('Header: '+value)
 
@@ -100,7 +100,7 @@ def read_mail(msg, indent=0):
     return f # mail,tag,date,link
     
 def get_fav():
-    ml = mylogger(logfile,get_funcname())    
+    ml = mylogger(logfile,get_funcname()) 
     try:
         M = poplib.POP3_SSL(mailsvr)
     except TimeoutError as e:
@@ -129,7 +129,7 @@ def get_fav():
             ml.debug('Remove email')
         else:
             ff[i]=f
-            ml.error('Empty link Email from: '+f['mail'])
+            ml.error('Empty link Email from: '+f['email'])
         
     ml.debug('Favor list: '+str(ff))
     M.quit()

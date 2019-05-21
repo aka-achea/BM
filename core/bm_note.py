@@ -10,10 +10,10 @@ from html.parser import HTMLParser
 # customized module
 # from modstr import modificate
 from openlink import op_simple,ran_header
-from bm_store import db
-from bm_pop import get_fav,logfile,dbfile,attention
+from notedb import NoteDataBase
+from bm_pop import get_fav
+from config import logfile,dbfile,attention
 from mylog import get_funcname,mylogger
-
 
 def ana_wx(page):
     ml = mylogger(logfile,get_funcname())   
@@ -30,7 +30,7 @@ def ana_wx(page):
     ml.debug(p)
     return p
 
-def ana_mono(page):
+def ana_mono(page): 
     ml = mylogger(logfile,get_funcname())   
     html = op_simple(page,ran_header())[0]
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
@@ -68,32 +68,36 @@ def main():
                 f['author'] = p['author']
                 f['title'] = p['title']  
                 ml.debug(f)
-                fl[i] = f
+                # fl[i] = f
             elif link.split('/')[2] == 'mmmono.com':
                 p = ana_mono(link)
                 f['source'] = 'MONO'
                 f['author'] = p['author']
                 f['title'] = p['title']  
                 ml.debug(f)
-                fl[i] = f
+                # fl[i] = f
             else:
                 ml.warning('Need to check source')
-                fl[i] = f
+                # fl[i] = f
+
         else:
-            # l.debug('Empty link Email from: '+f['mail'])
-            fl[i] = f
+            ml.debug('Empty link Email from: '+f['email'])
+            # fl[i] = f
+        fl[i] = f
+
 
     ml.debug('Full list: '+str(fl))
     ml.debug('store in DB')
-    d = db()
+    db = NoteDataBase(dbfile)
     num = len(fl)+1    
     for i in range(1,num):        
         f = fl[i]     
-        if 'link' in f.keys():     
-            d.insert(f)
+        if 'link' in f.keys(): 
+            ml.debug(f)    
+            db.insert_article(f)
         else:
-            ml.debug('Empty link Email from: '+f['mail'])
-            b = f['mail']
+            ml.debug('Empty link Email from: '+f['email'])
+            b = f['email']
             with open(attention,'a') as f:                
                 f.write('Empty link Email from: '+b+'\n')
 

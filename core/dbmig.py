@@ -1,5 +1,5 @@
 
-from db1 import NoteDataBase, User, Article, Tag, Source
+from notedb import NoteDataBase, User, Article, Tag, Source
 
 
 taglist = [
@@ -24,13 +24,13 @@ def import_article_csv(csv,dbfile):
         for line in contents:
             entry = line.split(',')
             adict = {
-            'timestamp':entry[0],
-            'title':entry[1],
-            'tag':entry[2],
-            'author':entry[3],
-            'source':entry[4],
-            'link':entry[5],
-            'email':entry[6].split()[0].upper()
+                'timestamp':entry[0],
+                'title':entry[1],
+                'tag':entry[2],
+                'author':entry[3],
+                'source':entry[4],
+                'link':entry[5],
+                'email':entry[6].split()[0].upper()
             }
             # print(adict)
             db.insert_article(adict)
@@ -56,21 +56,22 @@ def import_source(sourcelist,dbfile):
 
 
 if __name__ == "__main__":
-    csv = r'E:\UT\t.csv'
-    dbfile = r'E:\UT\note-test.sqlite'
+    csv = r'M:\MyProject\BM\mig.csv'
+    dbfile = r'M:\MyProject\BM\note-prd.sqlite'
     db = NoteDataBase(dbfile)
-    db.reset_db()
+    # db.reset_db()
 
-    import_tag(taglist,dbfile)
-    import_source(sourcelist,dbfile)
-    import_user(ulist,dbfile)
-    import_article_csv(csv,dbfile)
+    # import_tag(taglist,dbfile)
+    # import_source(sourcelist,dbfile)
+    # import_user(ulist,dbfile)
+    # import_article_csv(csv,dbfile)
 
     # db = DataBase(dbfile)
-    t = db.session.query(Tag).all()
-    print(t)
-    u = db.session.query(User).first()
-    print(u)
-    a = db.session.query(Article).all()
-    print(a)
+    # t = db.session.query(Tag).all()
+    # print(t)
+    # u = db.session.query(User).all()
+    # print(u)
+    ar = db.session.query(Article).all()
+    for a in ar:
+        print(a.timestamp,a.tag.fullname,a.title)
 
