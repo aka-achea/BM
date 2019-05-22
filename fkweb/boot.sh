@@ -1,2 +1,3 @@
 #!/bin/sh
-flask run
+source venv/bin/activate
+exec flask run

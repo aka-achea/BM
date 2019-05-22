@@ -14,6 +14,7 @@ ut-bm.py - unit test
 
 Change log:
 
+2019.5.22 
 2019.5.21 data migration v1.8
 2019.5.20 update function for data input v1.7
 2019.4.29 use flask_sqlalchemy v1.6

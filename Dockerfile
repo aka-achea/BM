@@ -10,10 +10,8 @@ USER flasky
 WORKDIR /home/flasky 
 
 COPY fkweb fkweb
-# RUN python -m venv venv 
-# RUN venv/bin/pip install -r fkweb/requirements.txt 
-RUN pip install -r fkweb/requirements.txt 
-
+RUN python -m venv venv 
+RUN venv/bin/pip install -r fkweb/requirements.txt 
 
 
 # run-time configuration
