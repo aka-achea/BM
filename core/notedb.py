@@ -51,6 +51,9 @@ class User(Base):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def show_hash(self):
+        return print(self.password_hash)
+
     def __repr__(self):
         return f'<{self.name} : {self.email}>'
 
@@ -70,7 +73,7 @@ class Article(Base):
     user = relationship('User',backref='articles')
 
     def __repr__(self):
-        return f'<{self.title} : {self.tag.fullname} : {self.user.name}>'
+        return f'<{self.title} : {self.tag.fullname}>'
 
 
 class NoteDataBase():
@@ -97,11 +100,11 @@ class NoteDataBase():
 
     def query_userarticle_bytitle(self,user,title):
         u = self.session.query(User).filter_by(name=user).first()
-        articles = []
-        for f in u.articles:
+        uarticles = []
+        for f in u.uarticles:
             if title in f.title:
-                articles.append(f)
-        return articles
+                uarticles.append(f)
+        return uarticles
 
     def insert_src(self,sourcename,fullname):
         s = Source(name=sourcename,fullname=fullname)
@@ -127,7 +130,8 @@ class NoteDataBase():
         userid = self.query_userid_bymail(article_dict['email'].upper())
         link = article_dict['link']
         src_id = self.query_srcid(article_dict['source'])
-        article = Article(timestamp=timestamp,title=title,author=author,tag_id=tagid,user_id=userid,link=link,src_id=src_id)
+        article = Article(timestamp=timestamp,title=title,author=author,tag_id=tagid,
+                            user_id=userid,link=link,src_id=src_id)
         self.session.add(article)
         self.session.commit()
 
@@ -138,27 +142,15 @@ if __name__ == "__main__":
     # dbfile = r'E:\UT\note-test.sqlite'
     dbfile = r'M:\MyProject\BM\note-prd.sqlite'
     db = NoteDataBase(dbfile)
-    # db.reset_db()
 
-
-
-
-    # os.remove(dbfile)
-
-    # engine = create_engine(r'sqlite:///'+dbfile)
-    # DBSession = sessionmaker(bind=engine)
-    # session = DBSession()
-    # Base.metadata.create_all(engine)  # create table
 
     # test(session)
-
-
-    t = db.session.query(Tag).all()
-    print(t)
-    u = db.session.query(User).all()
-    print(u)
-    s = db.session.query(Source).all()
-    print(s)
+    # t = db.session.query(Tag).all()
+    # print(t)
+    # u = db.session.query(User).all()
+    # print(u)
+    # s = db.session.query(Source).all()
+    # print(s)
 
     # a1 = {'timestamp':func.now(),'title':'hgaeh','tag':'历史','user':'a','link':'sgese','source':'wx'}
     # db.insert_article(a1)
@@ -166,10 +158,10 @@ if __name__ == "__main__":
     # # a = db.query_userarticle_bytitle('xx','测试')
     # # print(a[0].link)
 
-    # # a = db.session.query(Tag).all()
-    # # print(a)
-
-    # u = db.session.query(User).filter_by(name='a').first()
-    # for a in u.articles:
-    #     # if a.tag.name == '笑话' and 't' in a.title:
-    #     print(a)
+    u = db.session.query(User).filter_by(name='JASON').first()
+    for a in u.articles:
+        print(a)
+    # u.password = 'welcome'
+    # u.show_hash()
+    # db.session.commit()
+    # print(u.verify_password('welcome'))

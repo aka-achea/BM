@@ -44,24 +44,26 @@
 <div class="page_content">
 
         {% if current_user.is_authenticated %}
-            <br>
-            <div class="comment">
-                关键词  {{keyword}}  标签  {{tag}} 搜索结果:
-            </div>
-            <br>
-            
-            <a class="post">
-                {% for post in posts %}
-                <div class="post">
-                    <div class="post-content">
-                        <a href="{{ post.link }}">
-                            <b>{{ post.title }}</b> 
-                        </a>                        
-                    </div>
+            {% if posts %}
+                <br>
+                <div class="comment">
+                    关键词  {{keyword}}  标签  {{tag}} 搜索结果:
                 </div>
-                {% endfor %}
-            </a>
-
+                <br>
+                
+                <a class="post">
+                    {% for post in posts %}
+                    <div class="post">
+                        <div class="post-content">
+                            <a href="{{ post.link }}">
+                                <b>{{ post.title }}</b> 
+                            </a>                        
+                        </div>
+                    </div>
+                    {% endfor %}
+                </a>
+                
+            {% endif %}
 
         {% else %}
             Stranger        

@@ -16,6 +16,7 @@ from config import logfile,dbfile,attention
 from mylog import get_funcname,mylogger
 
 def ana_wx(page):
+    '''Analyze Weixin web'''
     ml = mylogger(logfile,get_funcname())   
     html = op_simple(page,ran_header())[0]
     # print(html)
@@ -31,6 +32,7 @@ def ana_wx(page):
     return p
 
 def ana_mono(page): 
+    '''Analyze Mono web'''
     ml = mylogger(logfile,get_funcname())   
     html = op_simple(page,ran_header())[0]
     bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
@@ -57,8 +59,7 @@ def main():
     ml.debug('Query Email')
     ff = get_fav()
     fl = {}  # favor list
-    num = len(ff)+1    
-    for i in range(1,num):
+    for i in range(1,len(ff)+1):
         f = ff[i]
         if 'link' in f.keys():     
             link = f['link']
@@ -85,12 +86,10 @@ def main():
             # fl[i] = f
         fl[i] = f
 
-
     ml.debug('Full list: '+str(fl))
     ml.debug('store in DB')
     db = NoteDataBase(dbfile)
-    num = len(fl)+1    
-    for i in range(1,num):        
+    for i in range(1,len(fl)+1):        
         f = fl[i]     
         if 'link' in f.keys(): 
             ml.debug(f)    

@@ -34,6 +34,7 @@ def guess_charset(msg):
     ml.debug('Message body charset: '+charset)
     return charset
 
+
 def decode_str(s):
     ml = mylogger(logfile,get_funcname()) 
     value, charset = decode_header(s)[0]
@@ -43,7 +44,9 @@ def decode_str(s):
     ml.debug(value)
     return value
 
+
 def read_mail(msg, indent=0):
+    '''Main function to read mail message'''
     ml = mylogger(logfile,get_funcname()) 
     f = {} # mail,tag,date,link
     if indent == 0:
@@ -51,9 +54,9 @@ def read_mail(msg, indent=0):
             value = msg.get(header, '')            
             if value:                
                 if header == 'From':
-                    ml.debug('Look for FROM address')
+                    # ml.debug('Look for FROM address')
                     hdr, addr = parseaddr(value)
-                    ml.debug(addr)
+                    ml.debug(f'Find FROM address {addr}')
                     f['email']=addr
                 elif header=='Subject':
                     ml.debug('Look for TAG')
@@ -78,7 +81,7 @@ def read_mail(msg, indent=0):
     else:
         content_type = msg.get_content_type()
         ml.debug('Message body content type: '+content_type)
-        if content_type=='text/plain' or content_type=='text/html':
+        if content_type == 'text/plain' or content_type == 'text/html':
             content = msg.get_payload(decode=True)
             ml.debug('Content is')
             ml.debug(content)
@@ -100,6 +103,7 @@ def read_mail(msg, indent=0):
     return f # mail,tag,date,link
     
 def get_fav():
+    '''Emurate favorite from email'''
     ml = mylogger(logfile,get_funcname()) 
     try:
         M = poplib.POP3_SSL(mailsvr)
@@ -116,7 +120,6 @@ def get_fav():
     ff = {}
     num = len(M.list()[1])
     ml.info("You have %d messages." % num)
-
     for i in range(int(num),0,-1):
         resp, lines, octets = M.retr(i)
         msg_content = b'\r\n'.join(lines).decode('utf-8')
