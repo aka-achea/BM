@@ -1,4 +1,5 @@
 
+__version__ = 20200315
 
 import configparser
 
@@ -12,4 +13,4 @@ key = config['mailsvr']['key']
 dbfile = config['setting']['dbfile']
 logfile = config['setting']['log']
 attention = config['setting']['attention']
-
+ffile = config['setting']['ff']

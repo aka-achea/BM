@@ -2,6 +2,7 @@
 #coding:utf-8
 #tested in win
 
+__version__ = 20200315
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, ForeignKey, func
@@ -143,6 +144,10 @@ if __name__ == "__main__":
     dbfile = r'M:\MyProject\BM\note-prd.sqlite'
     db = NoteDataBase(dbfile)
 
+    f = {'email': 'CJYRB@hotmail.com', 'tag': '生', 'timestamp': '2019-12-02 02:02:31', 
+    'link': 'https://mp.weixin.qq.com/s/uNRU8mbtmFKlAphd_itzyA', 'source': '微信公众号', 
+    'author': '申工社', 'title': '太棒了叭！这100个实用生活小妙招懒人必备！许多都万万没想到…'}
+    db.insert_article(f)
 
     # test(session)
     # t = db.session.query(Tag).all()
