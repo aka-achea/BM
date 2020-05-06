@@ -47,9 +47,8 @@ def main():
     # fl = {}  # favor list
     db = NoteDataBase(dbfile)   
     for i in range(1,len(ff)+1):
-        print(i)
-        f = ff[str(i)]
-        print(f)
+        f = ff[str(i)] #email,tag,timestamp,link
+        ml.dbg(f)
         if 'link' in f.keys():     
             link = f['link']
             if link.split('/')[2] == 'mp.weixin.qq.com':
@@ -58,7 +57,7 @@ def main():
                     f['source'] = '微信公众号'
                     f['author'] = p['author']
                     f['title'] = p['title']  
-                    ml.info(f)
+                    ml.dbg(f)
                 else:
                     with open(attention,'a') as f:                
                         f.write('Need to check: '+link+'\n')
@@ -68,15 +67,18 @@ def main():
                     f['source'] = 'MONO'
                     f['author'] = p['author']
                     f['title'] = p['title']  
-                    ml.info(f)
+                    ml.dbg(f)
                 else:
                     with open(attention,'a') as f:                
                         f.write('Need to check: '+link+'\n')
                     continue
+            elif link.split('/')[2] == 'v.douyin.com':
+                pass
             else:
-                ml.warning('Need to check source')
+                ml.warn('Need to check source')
+                raise
                 # fl[i] = f
-            db.insert_article(f)
+            db.insert_article(f) #email,tag,timestamp,link,source,author,title
         else:
             ml.info('Empty link Email from: '+f['email'])
             b = f['email']

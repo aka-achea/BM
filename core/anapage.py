@@ -6,6 +6,7 @@ __version__ = 20200315
 
 from bs4 import BeautifulSoup
 import re
+from functools import lru_cache
 
 # customized module
 # from modstr import modificate
@@ -14,6 +15,7 @@ from config import logfile
 from mylog import get_funcname,mylogger
 
 
+@lru_cache(maxsize=32)
 def ana_wx(page):
     '''Analyze Weixin web'''
     ml = mylogger(logfile,get_funcname())   
@@ -28,11 +30,13 @@ def ana_wx(page):
         title = title.text.strip()
         p = {'author':author,'title':title}
         # p['link'] = page
-        ml.info(p)
+        ml.dbg(p)
     except:
         return None
     return p
 
+
+@lru_cache(maxsize=32)
 def ana_mono(page): 
     '''Analyze Mono web'''
     ml = mylogger(logfile,get_funcname())   
@@ -45,8 +49,19 @@ def ana_mono(page):
     return p
 
 
+@lru_cache(maxsize=32)
+def ana_dy(page): 
+    '''Analyze Douyin web'''
+    ml = mylogger(logfile,get_funcname())   
+    html = op_simple(page,ran_header())[0]
+    bsObj = BeautifulSoup(html,"html.parser") #;print(bsObj)
+    author = bsObj.find('p',{'class':'name nowrap'}).text.strip()
+    title = bsObj.find('h1',{'class':'desc'}).text.strip()
+    p = {'author':author,'title':title}
+    ml.info(p)
+    return p
 
 
 if __name__ == "__main__":
-    page = 'https://mp.weixin.qq.com/s/oBmTR1Kr8YA9TC6qhJylVA'
-    print(ana_wx(page))
+    page = 'https://v.douyin.com/7uCmaC/'
+    print(ana_dy(page))
