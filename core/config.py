@@ -1,16 +1,17 @@
 
-__version__ = 20200315
+__version__ = 20200726
 
 import configparser
+import os
 
-
-confile = r'M:\MyProject\BM\bm.ini'
+projectpath = r'N:\MyProject\BM'
+confile = os.path.join(projectpath,'bm.ini')
 config = configparser.ConfigParser()
 config.read(confile)
-mailsvr = config['mailsvr']['pop']
-user = config['mailsvr']['user']
-key = config['mailsvr']['key']
-dbfile = config['setting']['dbfile']
-logfile = config['setting']['log']
-attention = config['setting']['attention']
-ffile = config['setting']['ff']
+mailsvr = os.path.join(projectpath,config['mailsvr']['pop'])
+user = os.path.join(projectpath,config['mailsvr']['user'])
+key = os.path.join(projectpath,config['mailsvr']['key'])
+dbfile = os.path.join(projectpath,config['setting']['dbfile'])
+logfile = os.path.join(projectpath,config['setting']['log'])
+attention = os.path.join(projectpath,config['setting']['attention'])
+ffile = os.path.join(projectpath,config['setting']['ff'])
