@@ -10,6 +10,7 @@ import json
 from bs4 import BeautifulSoup
 # from urllib.request import urlopen,Request,HTTPError,unquote
 from html.parser import HTMLParser
+from pprint import pprint
 
 # customized module
 # from modstr import modificate
@@ -46,8 +47,9 @@ def main():
             json.dump(ff,x,ensure_ascii=False,indent=2)
     # fl = {}  # favor list
     db = NoteDataBase(dbfile)   
-    for i in range(1,len(ff)+1):
-        f = ff[str(i)] #email,tag,timestamp,link
+    pprint(ff)
+    for x in range(1,len(ff)+1):
+        f = ff[str(x)] #email,tag,timestamp,link
         ml.dbg(f)
         if 'link' in f.keys():     
             link = f['link']

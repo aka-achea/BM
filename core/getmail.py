@@ -105,12 +105,13 @@ def get_fav() -> dict:
     # M.apop(user,key) # not supported
     M.user(user)
     M.pass_(key)
-    MS = M.stat()
-    ml.dbg(MS)
+    # MS = M.stat()
+    MS = M.list()
+    ml.info(MS)
     ff = {}
-    num = len(M.list()[1])
+    num = len(MS[1])
     ml.info("You have %d messages." % num)
-    for i in range(int(num),0,-1):
+    for i in range(10,1,-1):
         resp, lines, octets = M.retr(i)
         msg_content = b'\r\n'.join(lines).decode('utf-8')
         msg = Parser().parsestr(msg_content)
@@ -118,7 +119,7 @@ def get_fav() -> dict:
         f = read_mail(msg)
         if 'link' in f.keys():
             ff[i]=f
-            M.dele(i)
+            # M.dele(i)
             ml.info('Remove email')
         else:
             ff[i]=f
