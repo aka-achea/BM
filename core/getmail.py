@@ -105,11 +105,11 @@ def get_fav() -> dict:
     # M.apop(user,key) # not supported
     M.user(user)
     M.pass_(key)
-    # MS = M.stat()
-    MS = M.list()
+    MS = M.stat()
+    # MS = M.list()
     ml.info(MS)
     ff = {}
-    num = len(MS[1])
+    num = len(M.list()[1])
     ml.info("You have %d messages." % num)
     for i in range(10,1,-1):
         resp, lines, octets = M.retr(i)

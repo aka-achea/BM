@@ -11,11 +11,18 @@ from email.utils import parseaddr,parsedate,parsedate_to_datetime
 from mylog import get_funcname, mylogger
 from config import mailsvr,user,key,logfile
 
-
+import ssl
 from imapclient import IMAPClient
 
+HOST = 'imap.163.com'
+
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
+
+
 # context manager ensures the session is cleaned up
-with IMAPClient(host="imap.163.com") as client:
+with IMAPClient(host=HOST,ssl_context=ssl_context) as client:
     client.login(user,key)
     client.select_folder('INBOX')
 
