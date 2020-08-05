@@ -7,7 +7,9 @@ __version__ = 20200315
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, ForeignKey, func
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import sessionmaker, scoped_session
+
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -150,8 +152,10 @@ if __name__ == "__main__":
     # db.insert_article(f)
 
     # test(session)
-    # t = db.session.query(Tag).all()
-    # print(t)
+    t = db.session.query(Tag).all()
+    print(t)
+    id = db.query_tagid('食')
+    print(id)
     # u = db.session.query(User).all()
     # print(u)
     # s = db.session.query(Source).all()
@@ -163,9 +167,9 @@ if __name__ == "__main__":
     # # a = db.query_userarticle_bytitle('xx','测试')
     # # print(a[0].link)
 
-    u = db.session.query(User).filter_by(name='JASON').first()
-    for a in u.articles:
-        print(a)
+    # u = db.session.query(User).filter_by(name='JASON').first()
+    # for a in u.articles:
+    #     print(a)
     # u.password = 'welcome'
     # u.show_hash()
     # db.session.commit()
