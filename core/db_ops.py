@@ -21,7 +21,7 @@ class NoteDataBase():
 
     @contextmanager
     def db_session(self,commit=True):
-        session = self.session
+        session = self.session 
         try:
             yield session
             if commit:
@@ -72,17 +72,17 @@ class NoteDataBase():
             session.add(u)
 
     def insert_article(self,article_dict):
-        timestamp = article_dict['timestamp']
-        title = article_dict['title']
-        tagid = self.query_tagid(article_dict['tag'])
-        author = article_dict['author']
-        # print(article_dict['email'].upper())
-        userid = self.query_userid_bymail(article_dict['email'].upper())
-        link = article_dict['link']
-        src_id = self.query_srcid(article_dict['source'])
-        article = Article(timestamp=timestamp,title=title,author=author,tag_id=tagid,
-                            user_id=userid,link=link,src_id=src_id)
         with self.db_session() as session:
+            timestamp = article_dict['timestamp']
+            title = article_dict['title']
+            tagid = self.query_tagid(article_dict['tag'])
+            author = article_dict['author']
+            # print(article_dict['email'].upper())
+            userid = self.query_userid_bymail(article_dict['email'].upper())
+            link = article_dict['link']
+            src_id = self.query_srcid(article_dict['source'])
+            article = Article(timestamp=timestamp,title=title,author=author,tag_id=tagid,
+                                user_id=userid,link=link,src_id=src_id)
             session.add(article)
 
 
@@ -97,8 +97,8 @@ if __name__ == "__main__":
     'link': 'https://mp.weixin.qq.com/s/uNRU8mbtmFKlAphd_itzyA', 'source': '微信公众号', 
     'author': '申工社', 'title': '太棒人必备！许多都万万没想到…'}
     db.insert_article(f)
-    # id = db.query_tagid('食')
-    # print(id)
+    id = db.query_tagid('食')
+    print(id)
     # test(session)
     # t = db.session.query(Tag).all()
     # print(t)
