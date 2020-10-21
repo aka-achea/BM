@@ -2,6 +2,8 @@
 #coding:utf-8
 #tested in Win
 
+__version__ = 20201021
+
 import poplib,time
 from email.parser import Parser
 from email.header import decode_header
@@ -118,11 +120,11 @@ def get_fav() -> dict:
         # ml.info(msg)
         f = read_mail(msg)
         if 'link' in f.keys():
-            ff[i]=f
+            ff[str(i)]=f
             # M.dele(i)
             ml.info('Remove email')
         else:
-            ff[i]=f
+            ff[str(i)]=f
             ml.err('Empty link Email from: '+f['email'])
         
     ml.dbg('Favor list: '+str(ff))
